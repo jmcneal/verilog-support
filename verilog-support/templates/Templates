@@ -1,0 +1,29 @@
+§ ==========================================================
+§  User Macros
+§ ==========================================================
+
+SetMacro( 'AUTHOR',      'YOUR NAME' )
+SetMacro( 'AUTHORREF',   '' )
+SetMacro( 'COMPANY',     '' )
+SetMacro( 'COPYRIGHT',   '' )
+SetMacro( 'EMAIL',       '' )
+SetMacro( 'LICENSE',     '' )
+SetMacro( 'ORGANIZATION','' )
+
+SetStyle( 'default' )
+
+§ ==========================================================
+§  File Includes and Shortcuts
+§ ==========================================================
+
+§ MenuShortcut( 'Classes',   'c' )
+§ MenuShortcut( 'Phase',     'p' )
+MenuShortcut( 'Idioms',    'i' )
+MenuShortcut( 'Variables', 'v' )
+
+IncludeFile( 'Comments.templates' )
+IncludeFile( 'Idioms.templates' )
+§IncludeFile( 'UVM.templates' )
+IncludeFile( 'class.templates' )
+IncludeFile( 'phase.templates' )
+§IncludeFile( 'variables.templates' )

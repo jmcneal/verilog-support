@@ -1,0 +1,69 @@
+== UVM Classes.seq_item == map:csi, sc:i, noindent == 
+class |?CLASS_NAME| extends uvm_sequence_item;
+    // Variables
+    <CURSOR>
+    `uvm_object_utils_begin(|CLASS_NAME|)
+    `uvm_object_utils_end
+
+    // Constraints
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    function new(input string name="|CLASS_NAME|");
+        super.new(name);
+    endfunction
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    function string convert2string();
+        string s;
+        $sformat(s, "I'm a |CLASS_NAME|");
+        return s;
+    endfunction
+endclass : |CLASS_NAME|
+== UVM Classes.sequence == map:cq, sc:s, noindent == 
+class |?CLASS_NAME| extends uvm_sequence #(|?SEQ_ITEM|);
+
+    `uvm_object_utils_begin(|CLASS_NAME|)
+    `uvm_object_utils_end
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    function new(input string name="|CLASS_NAME|");
+        super.new(name);
+    endfunction
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    task body();
+        |SEQ_ITEM| req;
+
+        req = |SEQ_ITEM|::type_id::create("req");
+        start_item(req);
+        if(!req.randomize()) `uvm_fatal(get_name(), "Failed to randomize")
+        finish_item(req);
+    endtask
+endclass : |CLASS_NAME|
+== UVM Classes.agent == map:ca, sc:a, noindent == 
+class |?AGENT_TYPE|_agent extends uvm_component;
+    // Variables
+    <CURSOR>
+
+    // Members
+    |?AGENT_TYPE|_driver    driver;
+    |AGENT_TYPE|_monitor   mon;
+    |AGENT_TYPE|_sequencer seqr;
+
+    `uvm_object_utils_begin(|AGENT_TYPE|_agent)
+    `uvm_object_utils_end
+
+    // Constraints
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    function new(input string name="|AGENT_TYPE|_agent");
+        super.new(name);
+    endfunction
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    virtual task run_phase(uvm_phase phase);
+        super.run_phase(phase);
+        <-RUN_CODE->
+    endtask
+endclass : |AGENT_TYPE|_agent
+== ENDTEMPLATE ==
