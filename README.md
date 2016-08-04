@@ -11,10 +11,12 @@ This is a vim plugin that is heavily based on perl-support by Fritz and Wolfgang
 
 Install to ~/.vim/ directory. 
 
-I highly recommend using Tim Pope's [pathogen.vim](https://github.com/tpope/vim-pathogen) to install in its own directory. Then copy and paste:
+I highly recommend using Tim Pope's [pathogen.vim](https://github.com/tpope/vim-pathogen) to manage vim plugins. Once you ahve installed that, copy and paste:
 
     cd ~/.vim/bundle
     git clone git://github.com/jmcneal/verilog-support.git
+
+To pull the latest version of verilog-support directly from Github.
 
 #### Configuration ####
 
