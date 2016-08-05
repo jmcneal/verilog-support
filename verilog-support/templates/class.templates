@@ -1,25 +1,24 @@
-== UVM Classes.seq_item == map:csi, sc:i, noindent == 
+== UVM Classes.seq_item == map:csi, sc:i, noindent, jeff == 
 class |?CLASS_NAME| extends uvm_sequence_item;
     // Variables
-    <CURSOR>
     `uvm_object_utils_begin(|CLASS_NAME|)
     `uvm_object_utils_end
 
     // Constraints
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    |FX_COMMENT|
     function new(input string name="|CLASS_NAME|");
         super.new(name);
     endfunction
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    |TASK_COMMENT|
     function string convert2string();
         string s;
         $sformat(s, "I'm a |CLASS_NAME|");
         return s;
     endfunction
 endclass : |CLASS_NAME|
-== UVM Classes.sequence == map:cq, sc:s, noindent == 
+== UVM Classes.sequence == map:cq, sc:s, noindent, jeff == 
 class |?CLASS_NAME| extends uvm_sequence #(|?SEQ_ITEM|);
 
     `uvm_object_utils_begin(|CLASS_NAME|)
@@ -40,7 +39,7 @@ class |?CLASS_NAME| extends uvm_sequence #(|?SEQ_ITEM|);
         finish_item(req);
     endtask
 endclass : |CLASS_NAME|
-== UVM Classes.agent == map:ca, sc:a, noindent == 
+== UVM Classes.agent == jeff, map:ca, sc:a, noindent == 
 class |?AGENT_TYPE|_agent extends uvm_component;
     // Variables
     <CURSOR>

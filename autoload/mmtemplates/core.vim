@@ -42,7 +42,8 @@ if &cp || ( exists('g:Templates_Version') && g:Templates_Version != 'searching' 
 	finish
 endif
 "
-let s:Templates_Version = '0.9.3'     " version number of this script; do not change
+"let s:Templates_Version = '0.9.3'     " version number of this script; do not change
+let s:Templates_Version = '0.9.4444'     " version number of this script; do not change
 "
 "----------------------------------------------------------------------
 "  --- Find Newest Version ---   {{{2
@@ -762,6 +763,14 @@ function! s:AddTemplate ( type, name, settings, lines )
 			elseif s =~ '^sc\s*:' || s =~ '^shortcut\s*:'
 				let sc = matchstr ( s, '^\w\+\s*:\s*\zs'.s:library.regex_file.Mapping )
 
+                " Jeff's stuff
+            elseif s == 'jeff'
+                let recurse = 1
+                echohl WarningMsg
+                echo "The template has a keyword I'm processing."
+            elseif s == 'nojeff'
+                let recurse = 0
+
 			else
 				call s:ErrorMsg ( 'Warning: Unknown setting in template "'.name.'": "'.s.'"' )
 			endif
@@ -977,6 +986,27 @@ function! s:SetMacro ( name, replacement )
 	elseif has_key ( s:StandardMacros, a:name )
 		call s:ErrorMsg ( 'The special macro "'.a:name.'" can not be replaced via SetMacro.' )
 		return
+
+"    elseif a:replacement =~ '^template\s*:'
+"        call s:ErrorMsg ( "We're going to have to pull this ".a:replacement." out of a template")
+"        " gets me "Comment" from Comment.something
+"        " let key = matchstr ( a:replacement, '^template\s*:\s*\zs'.s:library.regex_file.Mapping )
+"        " call s:ErrorMsg ( "I see: ".string(key) )
+"        " gets me ""
+"        " let key = matchstr ( a:replacement, '^template\s*:\s*\zs' )
+"        let l:key = substitute(a:replacement ,'^template\s*:\s*', '', '') " remove leading 'template:'
+"        " let l:key = substitute(a:replacement ,'template:', '', '')
+"        call s:ErrorMsg ( "My key: ".l:key )
+"        " Not the correct index.
+"        for key in keys(s:library.templates)
+"            call s:ErrorMsg("key: ".key)
+"        endfor
+"        " let l:templ_value = s:library.templates [l:key.'!!type']
+"        " call s:ErrorMsg ( "My value: ".l:templ_value )
+"        " let s:library.macros[ a:name ] = s:library.templates [l:key.'!!type']
+"        " let s:library.macros[ a:name ] = s:library.templates [string(l:key)]
+"        let s:library.macros[ a:name ] = l:key
+"        return
 	endif
 	"
 	let s:library.macros[ a:name ] = a:replacement
@@ -1584,6 +1614,21 @@ function! s:ReplaceMacros ( text, m_local )
 			let m_text = get ( a:m_local, mlist[2] )
 		else
 			let m_text = get ( s:library.macros, mlist[2], '' )
+            " Jeff
+            if m_text =~ '^template\s*:'
+                " call s:ErrorMsg ( "We're going to have to pull this ".m_text." out of a template")
+                let key = substitute(m_text,'^template\s*:\s*', '', '') " remove leading 'template:'
+                " call s:ErrorMsg ( "My key: ".key )
+                " TODO: what's up with the "extensions" to these things? I'm seeing
+                " !default, !!menu, !!type, 
+                let [ cmds, m_text, type, placement, indentation ] = s:GetTemplate ( key, '!any' )
+                "call s:ErrorMsg("key: ".key)
+"                    let l:templ_value = s:library.templates [s:key]
+"                    call s:ErrorMsg ( "My value: ".l:templ_value )
+"
+"                    " let m_text = s:key.l:templ_value
+"                    let m_text = "Something is here"
+            endif
 		end
 		"
 		if m_text =~ s:library.regex_template.MacroNoCapture

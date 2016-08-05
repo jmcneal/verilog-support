@@ -9,6 +9,8 @@ SetMacro( 'COPYRIGHT',   '' )
 SetMacro( 'EMAIL',       '' )
 SetMacro( 'LICENSE',     '' )
 SetMacro( 'ORGANIZATION','' )
+SetMacro( 'TASK_COMMENT','template: Comments.Testing')
+SetMacro( 'FX_COMMENT',  'template: Comments.Function')
 
 SetStyle( 'default' )
 
@@ -27,3 +29,4 @@ IncludeFile( 'Idioms.templates' )
 IncludeFile( 'class.templates' )
 IncludeFile( 'phase.templates' )
 §IncludeFile( 'variables.templates' )
+IncludeFile( 'macros.templates' )
