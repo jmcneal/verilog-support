@@ -1,12 +1,15 @@
-== UVM Classes.seq_item == map:csi, sc:i, noindent, jeff == 
+== UVM Classes.Sequence Item == map:csi, sc:i, noindent == 
 class |?CLASS_NAME| extends uvm_sequence_item;
     // Variables
+    |EXE_COMMENT|
     `uvm_object_utils_begin(|CLASS_NAME|)
     `uvm_object_utils_end
 
+    |COMMENT|
     // Constraints
 
-    |FX_COMMENT|
+    // Not recognized as a macro...
+    |FX_COMMENT(NEW)|
     function new(input string name="|CLASS_NAME|");
         super.new(name);
     endfunction
@@ -18,7 +21,7 @@ class |?CLASS_NAME| extends uvm_sequence_item;
         return s;
     endfunction
 endclass : |CLASS_NAME|
-== UVM Classes.sequence == map:cq, sc:s, noindent, jeff == 
+== UVM Classes.Sequence == map:cq, sc:s, noindent == 
 class |?CLASS_NAME| extends uvm_sequence #(|?SEQ_ITEM|);
 
     `uvm_object_utils_begin(|CLASS_NAME|)
@@ -39,30 +42,147 @@ class |?CLASS_NAME| extends uvm_sequence #(|?SEQ_ITEM|);
         finish_item(req);
     endtask
 endclass : |CLASS_NAME|
-== UVM Classes.agent == jeff, map:ca, sc:a, noindent == 
-class |?AGENT_TYPE|_agent extends uvm_component;
-    // Variables
-    <CURSOR>
+== UVM Classes.Agent == map:ca, sc:a, noindent == 
+class |?AGENT_TYPE|_agent extends uvm_agent;
+    protected uvm_active_passive_enum is_active = UVM_ACTIVE;
 
-    // Members
     |?AGENT_TYPE|_driver    driver;
     |AGENT_TYPE|_monitor   mon;
     |AGENT_TYPE|_sequencer seqr;
 
-    `uvm_object_utils_begin(|AGENT_TYPE|_agent)
-    `uvm_object_utils_end
-
-    // Constraints
+    `uvm_component_utils_begin(|AGENT_TYPE|_agent)
+        `uvm_field_enum(uvm_active_passive_enum, is_active, UVM_ALL_ON)
+    `uvm_component_utils_end
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    function new(input string name="|AGENT_TYPE|_agent");
-        super.new(name);
+    function new(input string name="|AGENT_TYPE|_agent", uvm_component parent);
+        super.new(name, parent);
     endfunction
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    virtual task run_phase(uvm_phase phase);
-        super.run_phase(phase);
-        <-RUN_CODE->
-    endtask
+    virtual function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        if(is_active == UVM_ACTIVE) begin
+            seqr = |AGENT_TYPE|_sequencer::type_id::create("seqr", this);
+            driver = |AGENT_TYPE|_driver::type_id::create("driver", this);
+        end
+        mon = |AGENT_TYPE|_monitor::type_id::create("mon", this);
+    endfunction : build_phase
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    virtual function void connect_phase(uvm_phase phase);
+        super.connect_phase(phase);
+        if(is_active == UVM_ACTIVE) begin
+            driver.seq_item_port.connect(seqr.seq_item_export);
+        end
+        <-CONNECT_CODE->
+    endfunction : connect_phase
+
 endclass : |AGENT_TYPE|_agent
+== UVM Classes.Monitor == map:cm, noindent ==
+class |?MON_TYPE|_monitor extends uvm_monitor;
+    virtual |MON_TYPE|_if vif;
+    string monitor_intf;
+
+    uvm_analysis_port #(data_packet) item_collected_port;
+    data_packet data_collected;
+    data_packet data_clone;
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    function new(input string name="|MON_TYPE|_monitor", uvm_component parent);
+        super.new(name, parent);
+    endfunction
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    virtual function build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        if(!uvm_config_db#(string)::get(this, "", "monitor_intf", monitor_intf)) begin
+            `uvm_fatal("NOSTRING", {"Need interface name for: ", get_full_name(), ".monitor_intf"})
+        end
+        if(!uvm_config_db#(virtual |MON_TYPE|_if)::get(this, "",monitor_intf, vif)) begin
+            `uvm_fatal("NOVIF", {"virtual interface must be set for: ", get_full_name(), ".vif"})
+        end
+        item_collected_port = new("item_collected_port", this);
+        data_collected = data_packet::type_id::create("data_collected");
+        data_clone = data_packet::type_id::create("data_clone");
+    endfunction : build_phase
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    virtual task run_phase(uvm_phase phase);
+        fork
+            collect_data();
+            <-ADDITIONAL_RUN_THREADS->
+        join_none
+    endtask : run_phase
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    virtual task collect_data();
+        forever begin
+            <-ACCESS_VIF_CODE->
+            $cast(data_clone, data_collected.clone());
+            item_collected_port.write(data_clone);
+        end
+    endtask : collect_data
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    virtual function void report_phase(uvm_phase phase);
+        <-REPORT_CODE->
+    endfunction : report_phase
+
+endclass : |MON_TYPE|_monitor
+== UVM Classes.Driver == map:cd, noindent ==
+class |?DRIVER_TYPE|_driver extends uvm_driver;
+    virtual |DRIVER_TYPE|_if vif;
+    string |DRIVER_TYPE|_intf;
+
+    `uvm_component_utils_begin(|DRIVER_TYPE|)
+        `uvm_field_string(|DRIVER_TYPE|_intf, UVM_ALL_ON)
+    `uvm_component_utils_end
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    function new(input string name="|DRIVER_TYPE|_driver", uvm_component parent);
+        super.new(name, parent);
+    endfunction
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    virtual function build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        if(!uvm_config_db#(string)::get(this, "", "driver_intf", driver_intf)) begin
+            `uvm_fatal("NOSTRING", {"Need interface name for: ", get_full_name(), ".driver_intf"})
+        end
+        if(!uvm_config_db#(virtual |DRIVER_TYPE|_if)::get(this, "",driver_intf, vif)) begin
+            `uvm_fatal("NOVIF", {"virtual interface must be set for: ", get_full_name(), ".vif"})
+        end
+    endfunction : build_phase
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    virtual task run_phase(uvm_phase phase);
+        fork
+            reset();
+            get_and_drive();
+            <-ADDITIONAL_RUN_THREADS->
+        join_none
+    endtask : run_phase
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    virtual task reset();
+        <-RESET_PROCEDURE->
+    endtask : reset
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    virtual task get_and_drive();
+        forever begin
+            <-WAIT_FOR_RESET->
+            seq_item_port.get_next_item(req);
+            drive_packet(req);
+            seq_item_port.item_done();
+        end
+    endtask : get_and_drive
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    virtual task drive_packet(data_packet pkt);
+        <-DRIVE_VIRTUAL_INTERFACE->
+    endtask : drive_packet
+
+endclass : |DRIVER_TYPE|_driver
 == ENDTEMPLATE ==

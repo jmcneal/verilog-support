@@ -9,8 +9,9 @@ SetMacro( 'COPYRIGHT',   '' )
 SetMacro( 'EMAIL',       '' )
 SetMacro( 'LICENSE',     '' )
 SetMacro( 'ORGANIZATION','' )
-SetMacro( 'TASK_COMMENT','template: Comments.Testing')
+SetMacro( 'TASK_COMMENT','template: Comments.Task')
 SetMacro( 'FX_COMMENT',  'template: Comments.Function')
+§ SetMacro( 'EXE_COMMENT', 'call mmtemplates#core#InsertTemplate(g:SV_Templates, "Comments.end-of-line-comment") )
 
 SetStyle( 'default' )
 

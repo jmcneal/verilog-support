@@ -1,2 +1,14 @@
-== Macros.Spawn == map:ms ==
-`define SPAWN()
+== Macros.Spawn define == map:msd ==
+// Define a macro SPAWN that will spawn a number (NUM) of tasks (TASK). This will
+// fork them off properly using automatic variables. Use "s" for the iteration 
+// variable in the array of tasks to be called. For example: 
+//     `SPAWN(4, agent[s].monitor.watch_port() )
+`define SPAWN(NUM, TASK)                        \
+    for (int _ii = 0; _ii < NUM; _ii++) begin   \
+        fork                                    \
+            automatic int _loop_var = _ii;      \
+            TASK;                               \
+        join_none                               \
+    end
+== Macros.Spawn use == map:ms ==
+`SPAWN(<-number->, <-path.to.task[s]->)
