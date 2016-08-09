@@ -1,29 +1,37 @@
+§ ==========================================================
+§ Comment template
+§ ==========================================================
+§ Templates format is 
+§ == Comments.<comment name> == map:<keymap> [options] ==
+§ after that are several optionalfields: 
+§ placement: below, above, start, append, insert. Default below
+§ indentation: indent, noindent. Default indent
+§ shortcut: sc:<menu_shortcut_chars> 
+§ entry: [menu|nomenu] whether or not to add to the menu
+§ 
 == Comments.end-of-line-comment == append, nomenu ==
 // <CURSOR>
 == Comments.Testing == sc:m, indent  ==
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // This is a comment
-== Comments.Task == map:cme, sc:m, insert  ==
+== Comments.Task == map:ct, indent ==
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-//         TASK: |?METHODNAME|
-//  DESCRIPTION: <CURSOR>
-//   PARAMETERS: ????
-//     SEE ALSO: n/a
-== Comments.Function == map:cme, sc:m, insert  ==
+// Task: |?METHODNAME|
+// <CURSOR>
+== Comments.Function == map:cm, sc:m, insert  ==
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-//     FUNCTION: |?METHODNAME|
-//  DESCRIPTION: <CURSOR>
-//   PARAMETERS: ????
-//      RETURNS: ????
-//     SEE ALSO: n/a
-== Comments.Class description sv == map:chsv, sc:d, start, noindent ==
+// Function: |?METHODNAME|
+// <CURSOR>
+// Returns: ????
+== Comments.Constructor == map:cons, sc:m, insert  ==
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//  Constructor: new
+== Comments.Class description == map:chsv, sc:d, start, noindent ==
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-//        Class: |FILENAME|
+// Class: |?CLASS_NAME|
+// <CURSOR>
 //
-//  DESCRIPTION: <CURSOR>
-//
-//       PARENT: ---
 //         BUGS: ---
 //       AUTHOR: |AUTHOR| (|AUTHORREF|), |EMAIL|
 // ORGANIZATION: |ORGANIZATION|
@@ -31,27 +39,11 @@
 //      CREATED: |DATE| |TIME|
 //     REVISION: ---
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-== Comments.Class description svh == map:chsvh, sc:d, start, noindent ==
+== Comments.Module description == map:chv, sc:d, start, noindent ==
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
-//        CLASS: |FILENAME|
-//
-//  DESCRIPTION: <CURSOR>
-//
-//        NOTES: ---
-//         BUGS: ---
-//       AUTHOR: |AUTHOR| (|AUTHORREF|), |EMAIL|
-// ORGANIZATION: |ORGANIZATION|
-//      VERSION: 1.0
-//      CREATED: |DATE| |TIME|
-//     REVISION: ---
-///////////////////////////////////////////////////////////////////////////////////////////////////
-== Comments.Module description v == map:chv, sc:d, start, noindent ==
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//
-//       Module: |FILENAME|
-//
-//  DESCRIPTION: <CURSOR>
+//  Module: |?MODULE_NAME|
+//  <CURSOR>
 //
 //   IO SIGNALS: ---
 //       AUTHOR: |AUTHOR| (|AUTHORREF|), |EMAIL|
@@ -60,4 +52,4 @@
 //      CREATED: |DATE| |TIME|
 //     REVISION: ---
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-== ENDTEMPLATE =Perl=
+== ENDTEMPLATE =Verilog=
