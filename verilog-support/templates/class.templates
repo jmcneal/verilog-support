@@ -1,3 +1,18 @@
+§ We make use of some advanced features of the template engine that are
+§ currently undocumented.
+§
+§ Insert another templates using:
+§   |Insert('Comments.Function')|
+§
+§ Further options are given as additional arguments. The call:
+§   |Insert( 'Comments.Function', '|METHODNAME|', 'convert2string' )|
+§ will replace the macro |METHODNAME| in the template 'Comments.Function' with
+§ 'convert2string'.
+§
+§ The responsibility of inserting the cursor can be delegated to the inserted
+§ template using the '<CURSOR>' option:
+§   |Insert( 'Comments.Function', '<CURSOR>' )|
+
 == UVM Classes.Sequence Item == map:csi, sc:i, noindent == 
 class |?CLASS_NAME| extends uvm_sequence_item;
     // Variables
@@ -8,13 +23,12 @@ class |?CLASS_NAME| extends uvm_sequence_item;
     |COMMENT|
     // Constraints
 
-    // Not recognized as a macro...
-    |FX_COMMENT(NEW)|
+    |Insert( 'Comments.Function', '|METHODNAME|', 'new', '<CURSOR>' )|
     function new(input string name="|CLASS_NAME|");
         super.new(name);
     endfunction
 
-    |TASK_COMMENT|
+    |Insert( 'Comments.Task', '|METHODNAME|', 'convert2string' )|
     function string convert2string();
         string s;
         $sformat(s, "I'm a |CLASS_NAME|");
