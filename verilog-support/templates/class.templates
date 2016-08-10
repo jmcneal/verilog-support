@@ -1,30 +1,34 @@
-§ FunctionComment = MacroStart.'\(C\|Comment\)'.'(\(.\{-}\))'.MacroEnd
-== UVM.Classes.Test == map:ct, sc:i, noindent == 
-|CLASS_COMMENT|
-class |CLASS_NAME| extends test;
+§ We make use of some advanced features of the template engine that are
+§ currently undocumented.
+§
+§ Insert another templates using:
+§   |Insert('Comments.Function')|
+§
+§ Further options are given as additional arguments. The call:
+§   |Insert( 'Comments.Function', '|METHODNAME|', 'convert2string' )|
+§ will replace the macro |METHODNAME| in the template 'Comments.Function' with
+§ 'convert2string'.
+§
+§ The responsibility of inserting the cursor can be delegated to the inserted
+§ template using the '<CURSOR>' option:
+§   |Insert( 'Comments.Function', '<CURSOR>' )|
 
-    |Comment(Coments.Testing)|
-    function new(input string name="|CLASS_NAME|");
-        super.new(name);
-    endfunction
-
-endclass 
 == UVM.Classes.Sequence Item == map:csi, sc:i, noindent == 
-|CLASS_COMMENT|
-class |CLASS_NAME| extends uvm_sequence_item;
+|Insert( 'Comments.Class description', '<CURSOR>')|
+class |?CLASS_NAME| extends uvm_sequence_item;
     // Variables
-    |EXE_COMMENT|
+
     `uvm_object_utils_begin(|CLASS_NAME|)
     `uvm_object_utils_end
 
     // Constraints
 
-    |CON_COMMENT|
+    |Insert( 'Comments.Constructor')|
     function new(input string name="|CLASS_NAME|", uvm_component parent);
-        super.new(name, parent);
+        super.new(name);
     endfunction
 
-    |COMMENT_TASK|
+    |Insert( 'Comments.Task', '|METHODNAME|', 'convert2string', '<CURSOR>' )|
     function string convert2string();
         string s;
         $sformat(s, "I'm a |CLASS_NAME|");
@@ -33,18 +37,18 @@ class |CLASS_NAME| extends uvm_sequence_item;
 
 endclass : |CLASS_NAME|
 == UVM.Classes.Sequence == map:cq, sc:s, noindent == 
-|CLASS_COMMENT|
+|Insert( 'Comments.Class description', '<CURSOR>')|
 class |CLASS_NAME| extends uvm_sequence #(|?SEQ_ITEM|);
 
     `uvm_object_utils(|CLASS_NAME|)
 
-    |CON_COMMENT|
+    |Insert( 'Comments.Constructor')|
     function new(input string name="|CLASS_NAME|");
         super.new(name);
     endfunction
 
-    |COMMENT_TASK|
-    task body();
+    |Insert( 'Comments.Task', '|METHODNAME|', 'convert2string', '<CURSOR>' )|
+    virtual task body();
         |SEQ_ITEM| req;
 
         req = |SEQ_ITEM|::type_id::create("req");
@@ -55,7 +59,7 @@ class |CLASS_NAME| extends uvm_sequence #(|?SEQ_ITEM|);
 
 endclass : |CLASS_NAME|
 == UVM.Classes.Agent == map:ca, sc:a, noindent == 
-|CLASS_COMMENT|
+|Insert( 'Comments.Class description', '<CURSOR>')|
 class |?AGENT_TYPE|_agent extends uvm_agent;
     protected uvm_active_passive_enum is_active = UVM_ACTIVE;
 
@@ -67,12 +71,12 @@ class |?AGENT_TYPE|_agent extends uvm_agent;
         `uvm_field_enum(uvm_active_passive_enum, is_active, UVM_ALL_ON)
     `uvm_component_utils_end
 
-    |CON_COMMENT|
+    |Insert( 'Comments.Constructor')|
     function new(input string name="|AGENT_TYPE|_agent", uvm_component parent);
         super.new(name, parent);
     endfunction
 
-    |COMMENT_FX|
+    |Insert( 'Comments.Function', '|METHODNAME|', 'build_phase' )|
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
         if(is_active == UVM_ACTIVE) begin
@@ -82,7 +86,7 @@ class |?AGENT_TYPE|_agent extends uvm_agent;
         mon = |AGENT_TYPE|_monitor::type_id::create("mon", this);
     endfunction : build_phase
 
-    |COMMENT_FX|
+    |Insert( 'Comments.Function', '|METHODNAME|', 'connect_phase' )|
     virtual function void connect_phase(uvm_phase phase);
         super.connect_phase(phase);
         if(is_active == UVM_ACTIVE) begin
@@ -93,7 +97,7 @@ class |?AGENT_TYPE|_agent extends uvm_agent;
 
 endclass : |AGENT_TYPE|_agent
 == UVM.Classes.Monitor == map:cm, noindent ==
-|CLASS_COMMENT|
+|Insert( 'Comments.Class description', '<CURSOR>')|
 class |?MON_TYPE|_monitor extends uvm_monitor;
     virtual |MON_TYPE|_if vif;
     string monitor_intf;
@@ -102,12 +106,12 @@ class |?MON_TYPE|_monitor extends uvm_monitor;
     data_packet data_collected;
     data_packet data_clone;
 
-    |CON_COMMENT|
+    |Insert( 'Comments.Constructor')|
     function new(input string name="|MON_TYPE|_monitor", uvm_component parent);
         super.new(name, parent);
     endfunction
 
-    |COMMENT_FX|
+    |Insert( 'Comments.Function', '|METHODNAME|', 'build_phase' )|
     virtual function build_phase(uvm_phase phase);
         super.build_phase(phase);
         if(!uvm_config_db#(string)::get(this, "", "monitor_intf", monitor_intf)) begin
@@ -121,7 +125,7 @@ class |?MON_TYPE|_monitor extends uvm_monitor;
         data_clone = data_packet::type_id::create("data_clone");
     endfunction : build_phase
 
-    |COMMENT_TASK|
+    |Insert( 'Comments.Task', '|METHODNAME|', 'convert2string', '<CURSOR>' )|
     virtual task run_phase(uvm_phase phase);
         fork
             collect_data();
@@ -129,7 +133,7 @@ class |?MON_TYPE|_monitor extends uvm_monitor;
         join_none
     endtask : run_phase
 
-    |COMMENT_TASK|
+    |Insert( 'Comments.Task', '|METHODNAME|', 'convert2string', '<CURSOR>' )|
     virtual task collect_data();
         forever begin
             <-ACCESS_VIF_CODE->
@@ -138,14 +142,14 @@ class |?MON_TYPE|_monitor extends uvm_monitor;
         end
     endtask : collect_data
 
-    |COMMENT_FX|
+    |Insert( 'Comments.Function', '|METHODNAME|', 'report_phase' )|
     virtual function void report_phase(uvm_phase phase);
         <-REPORT_CODE->
     endfunction : report_phase
 
 endclass : |MON_TYPE|_monitor
 == UVM.Classes.Driver == map:cd, noindent ==
-|CLASS_COMMENT|
+|Insert( 'Comments.Class description', '<CURSOR>')|
 class |?DRIVER_TYPE|_driver extends uvm_driver;
     virtual |DRIVER_TYPE|_if vif;
     string |DRIVER_TYPE|_intf;
@@ -154,12 +158,12 @@ class |?DRIVER_TYPE|_driver extends uvm_driver;
         `uvm_field_string(|DRIVER_TYPE|_intf, UVM_ALL_ON)
     `uvm_component_utils_end
 
-    |CON_COMMENT|
+    |Insert( 'Comments.Constructor')|
     function new(input string name="|DRIVER_TYPE|_driver", uvm_component parent);
         super.new(name, parent);
     endfunction
 
-    |COMMENT_FX|
+    |Insert( 'Comments.Function', '|METHODNAME|', 'build_phase' )|
     virtual function build_phase(uvm_phase phase);
         super.build_phase(phase);
         if(!uvm_config_db#(string)::get(this, "", "driver_intf", driver_intf)) begin
@@ -170,7 +174,7 @@ class |?DRIVER_TYPE|_driver extends uvm_driver;
         end
     endfunction : build_phase
 
-    |COMMENT_TASK|
+    |Insert( 'Comments.Task', '|METHODNAME|', 'convert2string', '<CURSOR>' )|
     virtual task run_phase(uvm_phase phase);
         fork
             reset();
@@ -179,12 +183,12 @@ class |?DRIVER_TYPE|_driver extends uvm_driver;
         join_none
     endtask : run_phase
 
-    |COMMENT_TASK|
+    |Insert( 'Comments.Task', '|METHODNAME|', 'convert2string', '<CURSOR>' )|
     virtual task reset();
         <-RESET_PROCEDURE->
     endtask : reset
 
-    |COMMENT_TASK|
+    |Insert( 'Comments.Task', '|METHODNAME|', 'convert2string', '<CURSOR>' )|
     virtual task get_and_drive();
         forever begin
             <-WAIT_FOR_RESET->
@@ -194,7 +198,7 @@ class |?DRIVER_TYPE|_driver extends uvm_driver;
         end
     endtask : get_and_drive
 
-    |COMMENT_TASK|
+    |Insert( 'Comments.Task', '|METHODNAME|', 'convert2string', '<CURSOR>' )|
     virtual task drive_packet(data_packet pkt);
         <-DRIVE_VIRTUAL_INTERFACE->
     endtask : drive_packet

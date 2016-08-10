@@ -1,46 +1,58 @@
-== UVM Phases.build_phase == map:pb, sc:b == 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+== UVM.Phases.new == map:pn, sc:n == 
+|Insert( 'Comments.Constructor')|
+function new(input string name="|?CLASS_NAME|", uvm_component parent);
+    super.new(name, parent);
+endfunction
+== UVM.Phases.build_phase == map:pb, sc:b == 
+|Insert( 'Comments.Function', '|METHODNAME|', 'build_phase' )|
 virtual function void build_phase(uvm_phase phase);
     super.build_phase(phase);
+    <CURSOR>
 endfunction
-== UVM Phases.connect_phase == map:pc, sc:c == 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+== UVM.Phases.connect_phase == map:pc, sc:c == 
+|Insert( 'Comments.Function', '|METHODNAME|', 'connect_phase' )|
 virtual function void connect_phase(uvm_phase phase);
     super.connect_phase(phase);
+    <CURSOR>
 endfunction
-== UVM Phases.end_of_elaboration_phase == map:peoe, sc:e == 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+== UVM.Phases.end_of_elaboration_phase == map:peoe == 
+|Insert( 'Comments.Function', '|METHODNAME|', 'end_of_elaboration_phase' )|
 virtual function void end_of_elaboration_phase(uvm_phase phase);
-    super.end_of_elaboration_phase(phase);
+    <CURSOR>
 endfunction
-== UVM Phases.start_of_simulation_phase == map:psos, sc:s == 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+== UVM.Phases.start_of_simulation_phase == map:psos == 
+|Insert( 'Comments.Function', '|METHODNAME|', 'start_of_simulation_phase' )|
 virtual function void start_of_simulation_phase(uvm_phase phase);
-    super.start_of_simulation_phase(phase);
+    <CURSOR>
 endfunction
-== UVM Phases.run_phase == map:pr, sc:r == 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+== UVM.Phases.run_phase == map:pr, sc:r == 
+|Insert( 'Comments.Task', '|METHODNAME|', 'connect_phase' )|
 virtual task run_phase(uvm_phase phase);
     super.run_phase(phase);
+    <CURSOR>
 endtask
-== UVM Phases.extract_phase == map:pr, sc:x == 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-virtual task extract_phase(uvm_phase phase);
+== UVM.Phases.extract_phase == map:px, sc:x == 
+|Insert( 'Comments.Function', '|METHODNAME|', 'extract_phase' )|
+virtual function void extract_phase(uvm_phase phase);
     super.extract_phase(phase);
-endtask
-== UVM Phases.check_phase == map:pr, sc:k == 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-virtual task check_phase(uvm_phase phase);
+    <CURSOR>
+endfunction : extract_phase
+== UVM.Phases.check_phase == map:pk, sc:k == 
+|Insert( 'Comments.Function', '|METHODNAME|', 'check_phase' )|
+virtual function void check_phase(uvm_phase phase);
     super.check_phase(phase);
-endtask
-== UVM Phases.report_phase == map:pr, sc:p == 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-virtual task report_phase(uvm_phase phase);
+    <CURSOR>
+endfunction : check_phase
+== UVM.Phases.report_phase == map:pt, sc:t == 
+|Insert( 'Comments.Function', '|METHODNAME|', 'report_phase' )|
+virtual function void report_phase(uvm_phase phase);
     super.report_phase(phase);
-endtask
-== UVM Phases.final_phase == map:pr, sc:f == 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-virtual task final_phase(uvm_phase phase);
+    <CURSOR>
+endfunction : report_phase
+== UVM.Phases.final_phase == map:pf, sc:f == 
+|Insert( 'Comments.Function', '|METHODNAME|', 'final_phase' )|
+virtual function void final_phase(uvm_phase phase);
     super.final_phase(phase);
-endtask
+    <CURSOR>
+endfunction : final_phase
 == ENDTEMPLATE ==

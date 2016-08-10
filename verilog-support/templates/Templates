@@ -1,20 +1,16 @@
 § ==========================================================
 §  User Macros
 § ==========================================================
-
-SetMacro( 'AUTHOR',         'YOUR NAME' )
-SetMacro( 'AUTHORREF',      '' )
-SetMacro( 'COMPANY',        '' )
-SetMacro( 'COPYRIGHT',      '' )
-SetMacro( 'EMAIL',          '' )
-SetMacro( 'LICENSE',        '' )
-SetMacro( 'ORGANIZATION',   '' )
-SetMacro( 'CLASS_COMMENT',  'template: Comments.Class description')
-SetMacro( 'CON_COMMENT',    'template: Comments.Constructor')
-SetMacro( 'COMMENT_TASK',   'template: Comments.Task')
-§SetMacro( 'COMMENT_FX',     'template: Comments.Function')
-§ Works, but inserts in the wrong place (we call at the wrong time).
-SetMacro( 'EXE_COMMENT', 'call: mmtemplates#core#InsertTemplate(g:SV_Templates, "Comments.Testing")<CR>' )
+SetMacro( 'AUTHOR',      'YOUR NAME' )
+SetMacro( 'AUTHORREF',   '' )
+SetMacro( 'COMPANY',     '' )
+SetMacro( 'COPYRIGHT',   '' )
+SetMacro( 'EMAIL',       '' )
+SetMacro( 'LICENSE',     '' )
+SetMacro( 'ORGANIZATION','' )
+§ SetMacro( 'TASK_COMMENT','template: Comments.Task')
+§ SetMacro( 'FX_COMMENT',  'template: Comments.Function')
+§ SetMacro( 'EXE_COMMENT', 'call mmtemplates#core#InsertTemplate(g:SV_Templates, "Comments.end-of-line-comment") )
 
 SetStyle( 'default' )
 
@@ -29,7 +25,6 @@ MenuShortcut( 'Variables', 'v' )
 
 IncludeFile( 'comments.templates' )
 IncludeFile( 'idioms.templates' )
-§IncludeFile( 'UVM.templates' )
 IncludeFile( 'class.templates' )
 IncludeFile( 'phase.templates' )
 §IncludeFile( 'variables.templates' )

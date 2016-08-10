@@ -1,22 +1,29 @@
-== UVM Idioms.configdb_set == map:cdbs, insert ==
+== UVM.Idioms.configdb_set == map:cdbs, insert ==
 uvm_config_db#(<CURSOR>)::set(this,"", "var_name", var_value);
-== UVM Idioms.configdb_get == map:cdbg, insert ==
+== UVM.Idioms.configdb_get == map:cdbg, insert ==
 uvm_config_db#(<CURSOR>)::get(this,"", "var_name", var);
-== UVM Idioms.object_utils == map:ou ==
+== UVM.Idioms.object_utils == map:ou ==
 `uvm_object_utils( |CLASS_NAME|<CURSOR> )
-== UVM Idioms.object_utils_block == map:oub ==
+== UVM.Idioms.object_utils_block == map:oub ==
 `uvm_object_utils_begin( |CLASS_NAME|<CURSOR> )
+<SPLIT>
 `uvm_object_utils_end
-== UVM Idioms.component_utils == map:cu ==
+== UVM.Idioms.component_utils == map:cu ==
 `uvm_component_utils( <CURSOR> )
-== UVM Idioms.component_utils_block == map:cub ==
+== UVM.Idioms.component_utils_block == map:cub ==
 `uvm_component_utils_begin( <CURSOR> )
+<SPLIT>
 `uvm_component_utils_end
-== UVM Idioms.uvm_field_int == map:ufi ==
+== UVM.Idioms.uvm_field_int == map:ufi ==
     `uvm_field_int(<CURSOR>, UVM_DEFAULT)
-== UVM Idioms.uvm_field_enum == map:ufe ==
+== UVM.Idioms.uvm_field_enum == map:ufe ==
     `uvm_field_enum(<CURSOR>, UVM_DEFAULT)
-== UVM Idioms.analysis_port == map:isu, sc:s == 
+== UVM.Idioms.analysis_port == map:isu == 
     uvm_analysis_port #(|?TYPE|) <CURSOR>_ap; // output a |TYPE|
-== UVM Idioms.analysis_export == map:isu, sc:s == 
+== UVM.Idioms.analysis_export == map:isu == 
     uvm_analysis_export #(|?TYPE|) <CURSOR>_ae; // output a |TYPE|
+== UVM.Idioms.objection == 
+run_phase.raise_objection(this);
+<SPLIT>
+run_phase.drop_objection(this);
+== ENDTEMPLATE ==
