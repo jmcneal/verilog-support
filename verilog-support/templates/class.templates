@@ -24,7 +24,7 @@ class |?CLASS_NAME| extends uvm_sequence_item;
     // Constraints
 
     |Insert( 'Comments.Constructor')|
-    function new(input string name="|CLASS_NAME|", uvm_component parent);
+    function new(input string name="|CLASS_NAME|");
         super.new(name);
     endfunction
 
