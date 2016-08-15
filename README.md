@@ -5,19 +5,20 @@ Wolfgang Mehner. I've followed their architecture and a lot of his code structur
 to add similar support for UVM on SystemVerilog. Verilog-support.vim currently
 supports SystemVerilog and UVM on SV. 
 
-### Features ###
+## Features
 
 The verilog-support.vim plugin adds a set of templates that can be used to
 insert blocks of code into SystemVerilog files.
 
 * Comment templates: Insert comment headers for Tasks, Functions, Classes, Modules, etc. with menu or hot-key. Comments are suitable for NaturalDoc usage.
 * UVM Class templates: Insert class boilerplate for a new UVM class with a menu or hot-key
+* UVM Phase templates: Insert the various UVM phase tasks and functions with a menu or hot-key
 * UVM idioms template: Insert various UVM code snippets (config_db, objections, etc.) using menu or hot-key.
 
 Templates are user-configurable and extendable. If you have changes that you
 think others would find useful, please push them to me.
 
-### How do I get set up? ###
+## Installation
 
 Install to ~/.vim/ directory. 
 
@@ -30,24 +31,24 @@ Once you ahve installed that, copy and paste:
 
 To pull the latest version of verilog-support directly from Github.
 
-#### Configuration ####
+### Configuration
 
 verilog-support automatically inserts several bits of information into comments
 and headers in SystemVerilog and Verilog files. These are all set up in the
 verilog-support/verilog-support/templates/Templates file. Edit your user name
 and such there.
 
-#### Dependencies #### 
+### Dependencies
 
 Although not a dependency, I highly recommend using another plugin to handle
 Verilog syntax highlighting and indenting. Vitor Antunes
 [verilog_systemverilog.vim](https://github.com/vhda/verilog_systemverilog.vim)
 plugin is an excellent choice.
 
-### Release Notes ###
+## Release Notes
 
 The verilog-support plugin is still in its early stages, and being actively developed (on a part-time basis).
 
-### Who do I talk to? ###
+## Contact
 
 * Jeff McNeal jeff.mcneal@verilab.com

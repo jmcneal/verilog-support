@@ -883,22 +883,14 @@ if has("autocmd")
     autocmd BufNewFile,BufRead *.sv    setlocal  filetype=verilog_systemverilog
     "
     if s:SV_InsertFileHeader == 'yes'
-        autocmd BufNewFile  *.sv  call mmtemplates#core#InsertTemplate(g:SV_Templates, 'Comments.Class description')
-        autocmd BufNewFile  *.svh call mmtemplates#core#InsertTemplate(g:SV_Templates, 'Comments.Class description')
-        autocmd BufNewFile  *.v   call mmtemplates#core#InsertTemplate(g:SV_Templates, 'Comments.Module description')
+        autocmd BufNewFile  *.sv,*.svh  call mmtemplates#core#InsertTemplate(g:SV_Templates, 'Comments.Class description')
+        autocmd BufNewFile  *.v         call mmtemplates#core#InsertTemplate(g:SV_Templates, 'Comments.Module description')
     endif
 
-    autocmd BufRead  *.pl,*.pm,*.t,*.pod  call SV_HighlightJumpTargets()
+    autocmd BufRead  *.sv,*.svh,*.v,*.vh  call SV_HighlightJumpTargets()
     "
     " Wrap error descriptions in the quickfix window.
     autocmd BufReadPost quickfix  setlocal wrap | setlocal linebreak
     "
 "    exe 'autocmd BufNewFile,BufReadPost  '.s:SV_PerlModuleList.' setlocal foldmethod=expr | setlocal foldexpr=SV_ModuleListFold(v:lnum)'
-    "
-    if exists("loaded_matchit")
-      let b:match_words=
-        b:match_words . 
-        \ '\<`uvm_component_utils_begin\>:\<`uvm_component_utils_end\>,' .
-        \ '\<`uvm_object_utils_begin\>:\<`uvm_object_utils_end\>,'
-    endif
 endif
