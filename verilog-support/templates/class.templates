@@ -29,7 +29,7 @@ class |?CLASS_NAME| extends uvm_sequence_item;
     endfunction
 
     |Insert( 'Comments.Task', '|METHODNAME|', 'convert2string', '<CURSOR>' )|
-    function string convert2string();
+    virtual function string convert2string();
         string s;
         $sformat(s, "I'm a |CLASS_NAME|");
         return s;
@@ -102,9 +102,13 @@ class |?MON_TYPE|_monitor extends uvm_monitor;
     virtual |MON_TYPE|_if vif;
     string monitor_intf;
 
-    uvm_analysis_port #(data_packet) item_collected_port;
-    data_packet data_collected;
-    data_packet data_clone;
+    uvm_analysis_port #(|MON_TYPE|_packet) item_collected_port;
+    |MON_TYPE|_packet data_collected;
+    |MON_TYPE|_packet data_clone;
+
+    `uvm_component_utils_begin(|MON_TYPE|_monitor)
+        `uvm_field_string(monitor_intf, UVM_ALL_ON)
+    `uvm_component_utils_end
 
     |Insert( 'Comments.Constructor')|
     function new(input string name="|MON_TYPE|_monitor", uvm_component parent);
@@ -112,7 +116,7 @@ class |?MON_TYPE|_monitor extends uvm_monitor;
     endfunction
 
     |Insert( 'Comments.Function', '|METHODNAME|', 'build_phase' )|
-    virtual function build_phase(uvm_phase phase);
+    virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
         if(!uvm_config_db#(string)::get(this, "", "monitor_intf", monitor_intf)) begin
             `uvm_fatal("NOSTRING", {"Need interface name for: ", get_full_name(), ".monitor_intf"})
@@ -121,8 +125,8 @@ class |?MON_TYPE|_monitor extends uvm_monitor;
             `uvm_fatal("NOVIF", {"virtual interface must be set for: ", get_full_name(), ".vif"})
         end
         item_collected_port = new("item_collected_port", this);
-        data_collected = data_packet::type_id::create("data_collected");
-        data_clone = data_packet::type_id::create("data_clone");
+        data_collected = |MON_TYPE|_seq_item::type_id::create("data_collected");
+        data_clone = |MON_TYPE|_seq_item::type_id::create("data_clone");
     endfunction : build_phase
 
     |Insert( 'Comments.Task', '|METHODNAME|', 'convert2string', '<CURSOR>' )|
@@ -154,7 +158,7 @@ class |?DRIVER_TYPE|_driver extends uvm_driver;
     virtual |DRIVER_TYPE|_if vif;
     string |DRIVER_TYPE|_intf;
 
-    `uvm_component_utils_begin(|DRIVER_TYPE|)
+    `uvm_component_utils_begin(|DRIVER_TYPE|_driver)
         `uvm_field_string(|DRIVER_TYPE|_intf, UVM_ALL_ON)
     `uvm_component_utils_end
 
@@ -164,17 +168,17 @@ class |?DRIVER_TYPE|_driver extends uvm_driver;
     endfunction
 
     |Insert( 'Comments.Function', '|METHODNAME|', 'build_phase' )|
-    virtual function build_phase(uvm_phase phase);
+    virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        if(!uvm_config_db#(string)::get(this, "", "driver_intf", driver_intf)) begin
-            `uvm_fatal("NOSTRING", {"Need interface name for: ", get_full_name(), ".driver_intf"})
+        if(!uvm_config_db#(string)::get(this, "", "|DRIVER_TYPE|_intf", |DRIVER_TYPE|_intf)) begin
+            `uvm_fatal("NOSTRING", {"Need interface name for: ", get_full_name(), ".|DRIVER_TYPE|_intf"})
         end
-        if(!uvm_config_db#(virtual |DRIVER_TYPE|_if)::get(this, "",driver_intf, vif)) begin
+        if(!uvm_config_db#(virtual |DRIVER_TYPE|_if)::get(this, "",|DRIVER_TYPE|_if, vif)) begin
             `uvm_fatal("NOVIF", {"virtual interface must be set for: ", get_full_name(), ".vif"})
         end
     endfunction : build_phase
 
-    |Insert( 'Comments.Task', '|METHODNAME|', 'convert2string', '<CURSOR>' )|
+    |Insert( 'Comments.Task', '|METHODNAME|', 'run_phase', '<CURSOR>' )|
     virtual task run_phase(uvm_phase phase);
         fork
             reset();
@@ -183,12 +187,12 @@ class |?DRIVER_TYPE|_driver extends uvm_driver;
         join_none
     endtask : run_phase
 
-    |Insert( 'Comments.Task', '|METHODNAME|', 'convert2string', '<CURSOR>' )|
+    |Insert( 'Comments.Task', '|METHODNAME|', 'reset', '<CURSOR>' )|
     virtual task reset();
         <-RESET_PROCEDURE->
     endtask : reset
 
-    |Insert( 'Comments.Task', '|METHODNAME|', 'convert2string', '<CURSOR>' )|
+    |Insert( 'Comments.Task', '|METHODNAME|', 'get_and_drive', '<CURSOR>' )|
     virtual task get_and_drive();
         forever begin
             <-WAIT_FOR_RESET->
@@ -198,8 +202,8 @@ class |?DRIVER_TYPE|_driver extends uvm_driver;
         end
     endtask : get_and_drive
 
-    |Insert( 'Comments.Task', '|METHODNAME|', 'convert2string', '<CURSOR>' )|
-    virtual task drive_packet(data_packet pkt);
+    |Insert( 'Comments.Task', '|METHODNAME|', 'drive_packet', '<CURSOR>' )|
+    virtual task drive_packet(|DRIVER_TYPE|_seq_item pkt);
         <-DRIVE_VIRTUAL_INTERFACE->
     endtask : drive_packet
 
