@@ -1,0 +1,15 @@
+== Modules.Module == sc:m, insert ==
+|Insert( 'Comments.Module description', '<CURSOR>')|
+module |?MODULE_NAME| ();
+endmodule : |MODULE_NAME|
+== Modules.Interface == sc:i == 
+interface |?INTERFACE_NAME|;
+endinterface : |INTERFACE_NAME|
+== Modules.Clocking Block == sc:cb ==
+clocking |?CB_NAME| @(posedge |?CLOCK|);
+input #1ns output #1ns;
+<SPLIT>
+endclocking : |CB_NAME|
+== Modules.Modport == sc:mp ==
+modport |?MP_NAME| (input <CURSOR>, inout <-Inout->, output <-Output->);
+== ENDTEMPLATE ==

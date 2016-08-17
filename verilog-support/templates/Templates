@@ -18,14 +18,16 @@ SetStyle( 'default' )
 §  File Includes and Shortcuts
 § ==========================================================
 
-§ MenuShortcut( 'Classes',   'c' )
-§ MenuShortcut( 'Phase',     'p' )
-MenuShortcut( 'Idioms',    'i' )
-MenuShortcut( 'Variables', 'v' )
+MenuShortcut( 'UVM',        'U' )
+MenuShortcut( 'Idioms',     'i' )
+MenuShortcut( 'Modules',    'm' )
+§ MenuShortcut( 'Phase',      'p' )
+§ MenuShortcut( 'Variables',  'v' )
 
 IncludeFile( 'comments.templates' )
+IncludeFile( 'modules.templates' )
 IncludeFile( 'idioms.templates' )
 IncludeFile( 'class.templates' )
 IncludeFile( 'phase.templates' )
-§IncludeFile( 'variables.templates' )
+§ IncludeFile( 'variables.templates' )
 IncludeFile( 'macros.templates' )
