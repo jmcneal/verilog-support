@@ -102,9 +102,9 @@ class |?MON_TYPE|_monitor extends uvm_monitor;
     virtual |MON_TYPE|_if vif;
     string monitor_intf;
 
-    uvm_analysis_port #(|MON_TYPE|_packet) item_collected_port;
-    |MON_TYPE|_packet data_collected;
-    |MON_TYPE|_packet data_clone;
+    uvm_analysis_port #(|MON_TYPE|_seq_item) item_collected_port;
+    |MON_TYPE|_seq_item data_collected;
+    |MON_TYPE|_seq_item data_clone;
 
     `uvm_component_utils_begin(|MON_TYPE|_monitor)
         `uvm_field_string(monitor_intf, UVM_ALL_ON)
@@ -154,7 +154,7 @@ class |?MON_TYPE|_monitor extends uvm_monitor;
 endclass : |MON_TYPE|_monitor
 == UVM.Classes.Driver == map:cd, noindent ==
 |Insert( 'Comments.Class description', '<CURSOR>')|
-class |?DRIVER_TYPE|_driver extends uvm_driver;
+class |?DRIVER_TYPE|_driver extends uvm_driver #(|DRIVER_TYPE|_seq_item);
     virtual |DRIVER_TYPE|_if vif;
     string |DRIVER_TYPE|_intf;
 

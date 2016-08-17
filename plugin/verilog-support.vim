@@ -50,11 +50,11 @@ endfunction   " ---------- end of function  s:SV_SetGlobalVariable  ----------
 "                 variable exists
 "    PARAMETERS:  name - name of a global variable
 "===============================================================================
-function! s:perl_SetLocalVariable ( name )
+function! s:SV_SetLocalVariable ( name )
   if exists('g:'.a:name)
     exe 'let s:'.a:name.'  = g:'.a:name
   endif
-endfunction   " ---------- end of function  s:perl_SetLocalVariable  ----------
+endfunction   " ---------- end of function  s:SV_SetLocalVariable  ----------
 
 "------------------------------------------------------------------------------
 "
@@ -62,6 +62,8 @@ endfunction   " ---------- end of function  s:perl_SetLocalVariable  ----------
 "
 call s:SV_SetGlobalVariable( "SV_MenuHeader", 'yes')
 call s:SV_SetGlobalVariable( "SV_OutputGvim", 'vim')
+
+call s:SV_SetLocalVariable('SV_UseToolbox')
 
 "------------------------------------------------------------------------------
 "
@@ -95,8 +97,8 @@ let s:SV_ToolboxDir  = []
                     "  \    $HOME.'/.vim/autoload/mmtoolbox/' ]
     endif
     "
-    let s:SV_Perl                     = '/usr/bin/perl'
-    let g:SV_FilenameEscChar            = ' \%#[]'
+    " let s:SV_Perl                     = '/usr/bin/perl'
+    " let g:SV_FilenameEscChar            = ' \%#[]'
     "
     " ==============================================================================
 "endif
@@ -107,23 +109,14 @@ let s:SV_LoadMenus             = 'yes'        " display the menus ?
 let s:SV_TemplateOverriddenMsg = 'no'
 let s:SV_Ctrl_j                = 'on'
 "
-"let s:SV_PerlModuleList        = g:SV_PluginDir.'/verilog-support/modules/perl-modules.list'
-"let s:SV_XtermDefaults         = "-fa courier -fs 12 -geometry 80x24"
-"let s:SV_Debugger              = "perl"
-"let s:SV_ProfilerTimestamp     = "no"
 let s:SV_LineEndCommColDefault = 69
 let s:SV_LineEndCommColDefault = 69
-let s:SVStartComment             = '\/\/'       " This is used in a VIM expression, so needs to be escaped
-" let s:SV_PodcheckerWarnings    = "yes"
-" let s:SV_Printheader           = "%<%f%h%m%<  %=%{strftime('%x %X')}     Page %N"
-let s:SV_GuiSnippetBrowser     = 'gui'                                        " gui / commandline
-let s:SV_GuiTemplateBrowser    = 'gui'                                        " gui / explorer / commandline
+let s:SVStartComment           = '\/\/'       " This is used in a VIM expression, so needs to be escaped
+let s:SV_GuiSnippetBrowser     = 'gui'        " gui / commandline
+let s:SV_GuiTemplateBrowser    = 'gui'        " gui / explorer / commandline
 let s:SV_CreateMenusDelayed    = 'yes'
 "
 let s:SV_InsertFileHeader      = 'yes'
-"let s:SV_Wrapper                 = g:SV_PluginDir.'/verilog-support/scripts/wrapper.sh'
-"let s:SV_PerlModuleListGenerator = g:SV_PluginDir.'/verilog-support/scripts/pmdesc3.pl'
-"let s:SV_PerltidyBackup        = "no"
 "
 call s:SV_SetGlobalVariable ( 'SV_MapLeader', '' )
 let s:SV_RootMenu              = '&Verilog'
@@ -131,6 +124,8 @@ let s:SV_RootMenu              = '&Verilog'
 " TODO: add NaturalDocs as a toolbox option.
 " TODO: add Doxygen as a toolbox option.
 let s:SV_UseToolbox            = 'no'
+call s:SV_SetGlobalVariable ( 'SV_UseTool_make',  'no' )
+call s:SV_SetGlobalVariable ( 'SV_UseTool_ND',    'no' )
 
 "------------------------------------------------------------------------------
 "  Control variables (not user configurable)
@@ -140,10 +135,7 @@ let s:SV_MenuVisible           = 'no'
 let s:SV_TemplateJumpTarget    = ''
 
 let s:MsgInsNotAvail           = "insertion not available for a fold"
-"let g:SV_PerlRegexAnalyser     = 'no'
-"let g:SV_InterfaceInitialized  = 'no'
 let s:SV_saved_global_option   = {}
-
 
 "===  FUNCTION  ================================================================
 "          NAME:  SV_Input     {{{1
@@ -328,6 +320,114 @@ function! SV_AlignLineEndComm ( ) range
     "
 endfunction        " ---------- end of function  SV_AlignLineEndComm  ----------
 
+"
+let s:SV_CmtCounter   = 0
+let s:SV_CmtLabel     = "BlockCommentNo_"
+"
+"===  FUNCTION  ================================================================
+"          NAME:  SV_CommentBlock     {{{1
+"   DESCRIPTION:  set block of code within /* and */
+"    PARAMETERS:  mode - curent edit mode
+"===============================================================================
+function! SV_CommentBlock (mode)
+  "
+  let s:SV_CmtCounter = 0
+  let save_line         = line(".")
+  let actual_line       = 0
+  "
+  " search for the maximum option number (if any)
+  "
+  normal! gg
+  while actual_line < search( s:SV_CmtLabel."\\d\\+" )
+    let actual_line = line(".")
+    let actual_opt  = matchstr( getline(actual_line), s:SV_CmtLabel."\\d\\+" )
+    let actual_opt  = strpart( actual_opt, strlen(s:SV_CmtLabel),strlen(actual_opt)-strlen(s:SV_CmtLabel))
+    if s:SV_CmtCounter < actual_opt
+      let s:SV_CmtCounter = actual_opt
+    endif
+  endwhile
+  let s:SV_CmtCounter = s:SV_CmtCounter+1
+  silent exe ":".save_line
+  "
+  if a:mode=='a'
+    let zz=      "\n/* begin BlockComment  # ".s:SV_CmtLabel.s:SV_CmtCounter
+    let zz= zz."\n\n   end   BlockComment  # ".s:SV_CmtLabel.s:SV_CmtCounter
+    let zz= zz."\n*/\n"
+    put =zz
+  endif
+
+  if a:mode=='v'
+    let zz=    "\n/* begin BlockComment  # ".s:SV_CmtLabel.s:SV_CmtCounter."\n\n"
+    :'<put! =zz
+    let zz=    "\n   end   BlockComment  # ".s:SV_CmtLabel.s:SV_CmtCounter
+    let zz= zz."\n*/\n"
+    :'>put  =zz
+  endif
+
+endfunction    " ----------  end of function SV_CommentBlock ----------
+"
+"===  FUNCTION  ================================================================
+"          NAME:  SV_UncommentBlock     {{{1
+"   DESCRIPTION:  uncomment block of code (remove POD commands)
+"===============================================================================
+function! SV_UncommentBlock ()
+
+  let frstline  = searchpair( '^\/\*\sbegin\s\+BlockComment\s*#\s*'.s:SV_CmtLabel.'\d\+',
+      \                       '',
+      \                       '^\s*end\s\+BlockComment\s\+#\s*'.s:SV_CmtLabel.'\d\+',
+      \                       'bn' )
+  if frstline<=0
+    echohl WarningMsg | echo 'no comment block/tag found or cursor not inside a comment block'| echohl None
+    return
+  endif
+  let lastline  = searchpair( '^\/\*\sbegin\s\+BlockComment\s*#\s*'.s:SV_CmtLabel.'\d\+',
+      \                       '',
+      \                       '^\s*end\s\+BlockComment\s\+#\s*'.s:SV_CmtLabel.'\d\+',
+      \                       'n' )
+  if lastline<=0
+    echohl WarningMsg | echo 'no comment block/tag found or cursor not inside a comment block'| echohl None
+    return
+  endif
+  let actualnumber1  = matchstr( getline(frstline), s:SV_CmtLabel."\\d\\+" )
+  let actualnumber2  = matchstr( getline(lastline), s:SV_CmtLabel."\\d\\+" )
+  if actualnumber1 != actualnumber2
+    echohl WarningMsg | echo 'lines '.frstline.', '.lastline.': comment tags do not match'| echohl None
+    return
+  endif
+
+  let line1 = lastline
+  let line2 = lastline
+  " empty line before =end
+  if match( getline(lastline-1), '^\s*$' ) != -1
+    let line1 = line1-1
+  endif
+  if lastline+1<line("$") && match( getline(lastline+1), '^\s*$' ) != -1
+    let line2 = line2+1
+  endif
+  "if lastline+2<line("$") && match( getline(lastline+2), '^=cut' ) != -1
+  if lastline+1<line("$") && match( getline(lastline+1), '^\*\/' ) != -1
+    let line2 = line2+1
+  endif
+"  if lastline+3<line("$") && match( getline(lastline+3), '^\s*$' ) != -1
+  " empty line after */
+"  if lastline+2<line("$") && match( getline(lastline+2), '^\s*$' ) != -1
+"    let line2 = line2+1
+"  endif
+  silent exe ':'.line1.','.line2.'d'
+
+  let line1 = frstline
+  let line2 = frstline
+  if frstline>1 && match( getline(frstline-1), '^\s*$' ) != -1
+    let line1 = line1-1
+  endif
+  if match( getline(frstline+1), '^\s*$' ) != -1
+    let line2 = line2+1
+  endif
+  silent exe ':'.line1.','.line2.'d'
+
+endfunction    " ----------  end of function SV_UncommentBlock ----------
+"
+
 "===  FUNCTION  ================================================================
 "          NAME:  SV_CommentToggle     {{{1
 "   DESCRIPTION:  toggle comment
@@ -380,7 +480,6 @@ function! s:SV_InitMenus ()
     "
     " Preparation
     call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'do_reset' )
-    "call mmtemplates#core#CreateMenus ( 'g:SV_UVM_Templates', s:SV_RootMenu, 'sub_menu' )
     "
     " get the mapleader (correctly escaped)
     let [ esc_mapl, err ] = mmtemplates#core#Resource ( g:SV_Templates, 'escaped_mapleader' )
@@ -393,8 +492,10 @@ function! s:SV_InitMenus ()
     "-------------------------------------------------------------------------------
     "
     call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'sub_menu', '&Comments', 'priority', 500 )
-    " call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'sub_menu', '&UVM',      'priority', 600 )
     call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'sub_menu', '&Help',     'priority', 1000 )
+	if s:SV_UseToolbox == 'yes' && mmtoolbox#tools#Property ( s:SV_Toolbox, 'empty-menu' ) == 0
+		call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'sub_menu', '&Tool Box', 'priority', 900 )
+	endif
 
     "===============================================================================================
     "----- Menu : Comments                              {{{2
@@ -414,22 +515,23 @@ function! s:SV_InitMenus ()
     exe ihead.'toggle\ &comment<Tab>'.esc_mapl.'cc                    <C-C>:call SV_CommentToggle()<CR>j'
     exe vhead.'toggle\ &comment<Tab>'.esc_mapl.'cc                         :call SV_CommentToggle()<CR>j'
 
-    "===============================================================================================
-    "----- Menu : UVM                              {{{2
-    "===============================================================================================
-    " UVM blocks
-    " let ahead = 'anoremenu <silent> '.s:SV_RootMenu.'.&UVM.'
-    " let vhead = 'vnoremenu <silent> '.s:SV_RootMenu.'.&UVM.'
-    
-    "                                ( Library,         Root Menu) ...
-    " This adds ALL the menus to the UVM sub_menu
-	" call mmtemplates#core#CreateMenus( 'g:SV_Templates', s:SV_RootMenu.'.&UVM', 'do_templates')
-
+    exe ahead.'comment\ &block<Tab>'.esc_mapl.'cb                          :call SV_CommentBlock("a")<CR>'
+    exe ihead.'comment\ &block<Tab>'.esc_mapl.'cb                     <C-C>:call SV_CommentBlock("a")<CR>'
+    exe vhead.'comment\ &block<Tab>'.esc_mapl.'cb                     <C-C>:call SV_CommentBlock("v")<CR>'
+    exe ahead.'u&ncomment\ block<Tab>'.esc_mapl.'cub                       :call SV_UncommentBlock()<CR>'
+	exe ahead.'-Sep02-						<Nop>'
     "===============================================================================================
     "----- Menu : GENERATE MENU ITEMS FROM THE TEMPLATES                              {{{2
     "===============================================================================================
     call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'do_templates' )
     "
+    "----- Menu : Tools                            {{{2
+    "===============================================================================================
+	"
+	if s:SV_UseToolbox == 'yes' && mmtoolbox#tools#Property ( s:SV_Toolbox, 'empty-menu' ) == 0
+		call mmtoolbox#tools#AddMenus ( s:SV_Toolbox, s:SV_RootMenu.'.&Tool\ Box' )
+	endif
+	"
     return
 endfunction    " ----------  end of function s:SV_InitMenus  ----------
 "
@@ -520,7 +622,7 @@ function! s:SV_RereadTemplates ( displaymsg )
         if isdirectory( templ_dir ) && !filereadable( s:SV_LocalTemplateFile )
             " write a default local template file
             let template    = [    ]
-            let sample_template_file    = g:SV_PluginDir.'/perl-support/rc/sample_template_file'
+            let sample_template_file    = g:SV_PluginDir.'/verilog-support/rc/sample_template_file'
             if filereadable( sample_template_file )
                 for line in readfile( sample_template_file )
                     call add( template, line )
@@ -629,10 +731,6 @@ function! s:CreateAdditionalMaps ()
     " USER DEFINED COMMANDS
     "-------------------------------------------------------------------------------
     "
-    " ---------- commands : run -------------------------------------
-    " command! -nargs=* -complete=file PerlScriptArguments call SV_ScriptCmdLineArguments(<q-args>)
-    " command! -nargs=* -complete=file PerlSwitches        call SV_PerlCmdLineArguments(<q-args>)
-
     "-------------------------------------------------------------------------------
     " settings - local leader
     "-------------------------------------------------------------------------------
@@ -668,8 +766,6 @@ function! s:CreateAdditionalMaps ()
     "
     " ---------- plugin help -----------------------------------------------------
     "
-"    noremap    <buffer>  <silent>  <LocalLeader>h          :call SV_perldoc()<CR>
-"    inoremap   <buffer>  <silent>  <LocalLeader>h     <C-C>:call SV_perldoc()<CR>
     "noremap    <buffer>  <silent>  <LocalLeader>hp         :call SV_HelpSupport()<CR>
     "inoremap   <buffer>  <silent>  <LocalLeader>hp    <C-C>:call SV_HelpSupport()<CR>
     "
@@ -689,6 +785,11 @@ function! s:CreateAdditionalMaps ()
     nnoremap    <buffer>  <silent>  <LocalLeader>cc         :call SV_CommentToggle()<CR>j
     vnoremap    <buffer>  <silent>  <LocalLeader>cc         :call SV_CommentToggle()<CR>j
 
+	nnoremap    <buffer>  <silent>  <LocalLeader>cb         :call SV_CommentBlock("a")<CR>
+	inoremap    <buffer>  <silent>  <LocalLeader>cb    <C-C>:call SV_CommentBlock("a")<CR>
+	vnoremap    <buffer>  <silent>  <LocalLeader>cb    <C-C>:call SV_CommentBlock("v")<CR>
+	nnoremap    <buffer>  <silent>  <LocalLeader>cub        :call SV_UncommentBlock()<CR>
+	"
     " ----------------------------------------------------------------------------
     " Snippets & Templates
     " ----------------------------------------------------------------------------
@@ -716,60 +817,6 @@ function! s:CreateAdditionalMaps ()
 "    inoremap    <buffer>  <silent> <LocalLeader>nts  <C-C>:call mmtemplates#core#ChooseStyle(g:SV_Templates,"!pick")<CR>
     "
     "
-    " ----------------------------------------------------------------------------
-    " Regex
-    " ----------------------------------------------------------------------------
-    "
-"    nnoremap    <buffer>  <silent>  <LocalLeader>xr        :call perlsupportregex#SV_RegexPick( "Regexp", "n" )<CR>j
-"    nnoremap    <buffer>  <silent>  <LocalLeader>xs        :call perlsupportregex#SV_RegexPick( "String", "n" )<CR>j
-"    nnoremap    <buffer>  <silent>  <LocalLeader>xf        :call perlsupportregex#SV_RegexPickFlag( "n" )<CR>
-"    vnoremap    <buffer>  <silent>  <LocalLeader>xr   <C-C>:call perlsupportregex#SV_RegexPick( "Regexp", "v" )<CR>'>j
-"    vnoremap    <buffer>  <silent>  <LocalLeader>xs   <C-C>:call perlsupportregex#SV_RegexPick( "String", "v" )<CR>'>j
-"    vnoremap    <buffer>  <silent>  <LocalLeader>xf   <C-C>:call perlsupportregex#SV_RegexPickFlag( "v" )<CR>'>j
-"    nnoremap    <buffer>  <silent>  <LocalLeader>xm        :call perlsupportregex#SV_RegexVisualize( )<CR>
-"    nnoremap    <buffer>  <silent>  <LocalLeader>xmm       :call perlsupportregex#SV_RegexMatchSeveral( )<CR>
-"    nnoremap    <buffer>  <silent>  <LocalLeader>xe        :call perlsupportregex#SV_RegexExplain( "n" )<CR>
-"    vnoremap    <buffer>  <silent>  <LocalLeader>xe   <C-C>:call perlsupportregex#SV_RegexExplain( "v" )<CR>
-    "
-    "
-    " ----------------------------------------------------------------------------
-    " POD
-    " ----------------------------------------------------------------------------
-    "
-"    nnoremap    <buffer>  <silent>  <LocalLeader>pod        :call SV_PodCheck()<CR>
-"    nnoremap    <buffer>  <silent>  <LocalLeader>podh       :call SV_POD('html')<CR>
-"    nnoremap    <buffer>  <silent>  <LocalLeader>podm       :call SV_POD('man')<CR>
-"    nnoremap    <buffer>  <silent>  <LocalLeader>podt       :call SV_POD('text')<CR>
-"    "
-"    inoremap    <buffer>  <silent>  <LocalLeader>pod   <Esc>:call SV_PodCheck()<CR>
-"    inoremap    <buffer>  <silent>  <LocalLeader>podh  <Esc>:call SV_POD('html')<CR>
-"    inoremap    <buffer>  <silent>  <LocalLeader>podm  <Esc>:call SV_POD('man')<CR>
-"    inoremap    <buffer>  <silent>  <LocalLeader>podt  <Esc>:call SV_POD('text')<CR>
-    "
-"    noremap    <buffer>  <silent>  <LocalLeader>ri         :call SV_perldoc_show_module_list()<CR>
-"    noremap    <buffer>  <silent>  <LocalLeader>rg         :call SV_perldoc_generate_module_list()<CR>
-"    "
-"    noremap    <buffer>  <silent>  <LocalLeader>ry         :call SV_Perltidy("n")<CR>
-"    vnoremap   <buffer>  <silent>  <LocalLeader>ry    <C-C>:call SV_Perltidy("v")<CR>
-"    "
-"    noremap    <buffer>  <silent>  <LocalLeader>rpc        :call SV_Perlcritic()<CR>
-"    noremap    <buffer>  <silent>  <LocalLeader>rt         :call SV_SaveWithTimestamp()<CR>
-"    noremap    <buffer>  <silent>  <LocalLeader>rh         :call SV_Hardcopy("n")<CR>
-"    vnoremap   <buffer>  <silent>  <LocalLeader>rh    <C-C>:call SV_Hardcopy("v")<CR>
-"    "
-"    noremap    <buffer>  <silent>  <LocalLeader>rk    :call SV_Settings()<CR>
-"    "
-"    inoremap   <buffer>  <silent>  <LocalLeader>ri    <C-C>:call SV_perldoc_show_module_list()<CR>
-"    inoremap   <buffer>  <silent>  <LocalLeader>rg    <C-C>:call SV_perldoc_generate_module_list()<CR>
-"    inoremap   <buffer>  <silent>  <LocalLeader>ry    <C-C>:call SV_Perltidy("n")<CR>
-"    inoremap   <buffer>  <silent>  <LocalLeader>rpc   <C-C>:call SV_Perlcritic()<CR>
-"    inoremap   <buffer>  <silent>  <LocalLeader>rt    <C-C>:call SV_SaveWithTimestamp()<CR>
-"    inoremap   <buffer>  <silent>  <LocalLeader>rh    <C-C>:call SV_Hardcopy("n")<CR>
-"    inoremap   <buffer>  <silent>  <LocalLeader>rk    <C-C>:call SV_Settings()<CR>
-"    "
-"    noremap    <buffer>  <silent>  <LocalLeader>ro         :call SV_Toggle_Gvim_Xterm()<CR>
-"    inoremap    <buffer>  <silent>  <LocalLeader>ro    <C-C>:call SV_Toggle_Gvim_Xterm()<CR>
-    "
 	" ----------------------------------------------------------------------------
 	"
 	if !exists("g:SV_Ctrl_j") || ( exists("g:SV_Ctrl_j") && g:SV_Ctrl_j != 'off' )
@@ -780,9 +827,9 @@ function! s:CreateAdditionalMaps ()
     " tool box
     "-------------------------------------------------------------------------------
     "
-"    if s:SV_UseToolbox == 'yes'
-"        call mmtoolbox#tools#AddMaps ( s:SV_Toolbox )
-"    endif
+    if s:SV_UseToolbox == 'yes'
+        call mmtoolbox#tools#AddMaps ( s:SV_Toolbox )
+    endif
     "
     "-------------------------------------------------------------------------------
     " settings - reset local leader
@@ -794,46 +841,6 @@ function! s:CreateAdditionalMaps ()
             unlet g:maplocalleader
         endif
     endif
-    "
-    " ----------------------------------------------------------------------------
-    "  Generate (possibly exuberant) Ctags style tags for Perl sourcecode.
-    "  Controlled by g:SV_PerlTags, disabled by default.
-    " ----------------------------------------------------------------------------
-"    if has('perl') && exists("g:SV_PerlTags") && g:SV_PerlTags == 'on'
-"
-"        if ! exists("s:defined_functions")
-"            function s:init_tags()
-"            perl <<EOF
-"
-"            use if defined $ENV{PERL_LOCAL_INSTALLATION}, lib => $ENV{PERL_LOCAL_INSTALLATION};
-"
-"             eval { require Perl::Tags::Naive };
-"            if ( $@ ) {
-"                # Perl::Tags::Naive not loadable
-"                VIM::DoCommand("let g:SV_PerlTags = 'off'" );
-"                }
-"            else {
-"                $naive_tagger = Perl::Tags::Naive->new( max_level=>2 );
-"            }
-"EOF
-"        endfunction
-"
-"        " let vim do the tempfile cleanup and protection
-"        let s:tagfile = tempname()
-"
-"        call s:init_tags() " only the first time
-"
-"        let s:defined_functions = 1
-"    endif
-"
-"    call SV_do_tags( expand('%'), s:tagfile )
-"
-"    augroup perltags
-"        au!
-"        autocmd BufRead,BufWritePost *.pm,*.pl call SV_do_tags(expand('%'), s:tagfile)
-"    augroup END
-"
-"endif
     "
 endfunction    " ----------  end of function s:CreateAdditionalMaps  ----------
 
@@ -848,13 +855,13 @@ endfunction    " ----------  end of function s:CreateAdditionalMaps  ----------
 "
 if s:SV_UseToolbox == 'yes'
     "
-    let s:SV_Toolbox = mmtoolbox#tools#NewToolbox ( 'Perl' )
+    let s:SV_Toolbox = mmtoolbox#tools#NewToolbox ( 'SV' )
     call mmtoolbox#tools#Property ( s:SV_Toolbox, 'mapleader', g:SV_MapLeader )
     "
     call mmtoolbox#tools#Load ( s:SV_Toolbox, s:SV_ToolboxDir )
     "
     " debugging only:
-    "call mmtoolbox#tools#Info ( s:SV_Toolbox )
+    " call mmtoolbox#tools#Info ( s:SV_Toolbox )
     "
 endif
 "

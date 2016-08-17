@@ -11,16 +11,16 @@
 § 
 == Comments.end-of-line-comment == append, nomenu ==
 // <CURSOR>
-== Comments.Task == map:ct, insert  ==
+== Comments.Task == map:ct, insert ==
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Task: |?METHODNAME|
 // <CURSOR>
-== Comments.Function == map:cf, insert  ==
+== Comments.Function == map:cf, insert ==
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Function: |?METHODNAME|
 // <CURSOR>
 // Returns: ????
-== Comments.Constructor == map:cons, insert  ==
+== Comments.Constructor == map:cons, insert ==
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //  Constructor: new
 == Comments.Class description == map:chsv, start, above, noindent ==

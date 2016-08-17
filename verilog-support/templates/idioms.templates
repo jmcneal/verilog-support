@@ -3,15 +3,15 @@ uvm_config_db#(<CURSOR>)::set(this,"", "var_name", var_value);
 == UVM.Idioms.configdb_get == map:cdbg, insert ==
 uvm_config_db#(<CURSOR>)::get(this,"", "var_name", var);
 == UVM.Idioms.object_utils == map:ou ==
-`uvm_object_utils( |CLASS_NAME|<CURSOR> )
+`uvm_object_utils( |?CLASS_NAME| )
 == UVM.Idioms.object_utils_block == map:oub ==
-`uvm_object_utils_begin( |CLASS_NAME|<CURSOR> )
+`uvm_object_utils_begin( |?CLASS_NAME| )
 <SPLIT>
 `uvm_object_utils_end
 == UVM.Idioms.component_utils == map:cu ==
-`uvm_component_utils( <CURSOR> )
+`uvm_component_utils( |?CLASS_NAME| )
 == UVM.Idioms.component_utils_block == map:cub ==
-`uvm_component_utils_begin( <CURSOR> )
+`uvm_component_utils_begin( |?CLASS_NAME| )
 <SPLIT>
 `uvm_component_utils_end
 == UVM.Idioms.uvm_field_int == map:ufi ==
@@ -23,7 +23,7 @@ uvm_config_db#(<CURSOR>)::get(this,"", "var_name", var);
 == UVM.Idioms.analysis_export == map:isu == 
     uvm_analysis_export #(|?TYPE|) <CURSOR>_ae; // output a |TYPE|
 == UVM.Idioms.objection == 
-run_phase.raise_objection(this);
+phase.raise_objection(this);
 <SPLIT>
-run_phase.drop_objection(this);
+phase.drop_objection(this);
 == ENDTEMPLATE ==
