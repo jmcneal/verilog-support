@@ -8,9 +8,9 @@ uvm_config_db#(<CURSOR>)::get(this,"", "var_name", var);
 `uvm_object_utils_begin( |?CLASS_NAME| )
 <SPLIT>
 `uvm_object_utils_end
-== UVM.Idioms.component_utils == map:cu ==
+== UVM.Idioms.component_utils == map:icu ==
 `uvm_component_utils( |?CLASS_NAME| )
-== UVM.Idioms.component_utils_block == map:cub ==
+== UVM.Idioms.component_utils_block == map:icub ==
 `uvm_component_utils_begin( |?CLASS_NAME| )
 <SPLIT>
 `uvm_component_utils_end
