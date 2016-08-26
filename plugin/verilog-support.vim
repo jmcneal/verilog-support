@@ -491,7 +491,7 @@ function! s:SV_InitMenus ()
     " menu headers
     "-------------------------------------------------------------------------------
     "
-    call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'sub_menu', '&Comments', 'priority', 500 )
+    call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'sub_menu', '&Comments', 'priority', 500, 'specials_menu', '&Comments.&Style', 'do_styles' )
     call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'sub_menu', '&Help',     'priority', 1000 )
 	if s:SV_UseToolbox == 'yes' && mmtoolbox#tools#Property ( s:SV_Toolbox, 'empty-menu' ) == 0
 		call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'sub_menu', '&Tool Box', 'priority', 900 )
@@ -520,6 +520,15 @@ function! s:SV_InitMenus ()
     exe vhead.'comment\ &block<Tab>'.esc_mapl.'cb                     <C-C>:call SV_CommentBlock("v")<CR>'
     exe ahead.'u&ncomment\ block<Tab>'.esc_mapl.'cub                       :call SV_UncommentBlock()<CR>'
 	exe ahead.'-Sep02-						<Nop>'
+    " comments 
+    " Works, but creates menu called "Run" 
+    " call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'sub_menu', '&Comments.&Change Comment Style', 'priority', 900 , 'do_styles')
+    " call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'sub_menu', '&Comments.&Change Comment Style', 'specials_menu', 'Chicken' , 'do_styles')
+    " These sort of work. They build the menus, but the items don't seem to
+    " actually switch the style.
+    " exe ahead.'&Change\ Comment\ Style.NaturalDocs   :call mmtemplates#core#Resource ( g:SV_Templates, "set", "property", "Templates::ChooseStyle::Map", "NaturalDocs" )<CR>'
+    " exe ahead.'&Change\ Comment\ Style.NTS           :call mmtemplates#core#Resource ( g:SV_Templates, "set", "property", "Templates::ChooseStyle::Map", "nts" )<CR>'
+    " exe ahead.'&Change\ Comment\ Style.Default       :call mmtemplates#core#Resource ( g:SV_Templates, "set", "property", "Templates::ChooseStyle::Map", "default" )<CR>'
     "===============================================================================================
     "----- Menu : GENERATE MENU ITEMS FROM THE TEMPLATES                              {{{2
     "===============================================================================================
@@ -584,7 +593,7 @@ function! s:SV_RereadTemplates ( displaymsg )
     endif
     "
     " map: choose style
-    call mmtemplates#core#Resource ( g:SV_Templates, 'set', 'property', 'Templates::ChooseStyle::Map', 'nts' )
+    call mmtemplates#core#Resource ( g:SV_Templates, 'set', 'property', 'Templates::ChooseStyle::Map', 'NaturalDocs' )
     "
     " syntax: comments
     call mmtemplates#core#ChangeSyntax ( g:SV_Templates, 'comment', '§' )
@@ -813,8 +822,8 @@ function! s:CreateAdditionalMaps ()
 "    endif
 "    nnoremap    <buffer>  <silent> <LocalLeader>ntr       :call mmtemplates#core#ReadTemplates(g:SV_Templates,"reload","all")<CR>
 "    inoremap    <buffer>  <silent> <LocalLeader>ntr  <C-C>:call mmtemplates#core#ReadTemplates(g:SV_Templates,"reload","all")<CR>
-"    nnoremap    <buffer>  <silent> <LocalLeader>nts       :call mmtemplates#core#ChooseStyle(g:SV_Templates,"!pick")<CR>
-"    inoremap    <buffer>  <silent> <LocalLeader>nts  <C-C>:call mmtemplates#core#ChooseStyle(g:SV_Templates,"!pick")<CR>
+    nnoremap    <buffer>  <silent> <LocalLeader>nts       :call mmtemplates#core#ChooseStyle(g:SV_Templates,"!pick")<CR>
+    inoremap    <buffer>  <silent> <LocalLeader>nts  <C-C>:call mmtemplates#core#ChooseStyle(g:SV_Templates,"!pick")<CR>
     "
     "
 	" ----------------------------------------------------------------------------
