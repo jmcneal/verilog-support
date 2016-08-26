@@ -1,6 +1,6 @@
 # verilog-support.vim #
 
-This is a vim plugin that is heavily based on perl-support by Fritz and
+This is a vim plugin that is heavily based on [perl-support](https://github.com/WolfgangMehner/perl-support) by Fritz and
 Wolfgang Mehner. I've followed their architecture and a lot of his code structure
 to add similar support for UVM on SystemVerilog. Verilog-support.vim currently
 supports SystemVerilog and UVM on SV. 
