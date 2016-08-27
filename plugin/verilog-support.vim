@@ -490,27 +490,31 @@ function! s:SV_InitMenus ()
     "-------------------------------------------------------------------------------
     " menu headers
     "-------------------------------------------------------------------------------
-    "
-    call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'sub_menu', '&Comments', 'priority', 500, 'specials_menu', '&Comments.&Style', 'do_styles' )
-    call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'sub_menu', '&Help',     'priority', 1000 )
+
+	call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'sub_menu', '&Comments', 'priority', 500 )
+	call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'sub_menu', '&Help',     'priority', 1000 )
 	if s:SV_UseToolbox == 'yes' && mmtoolbox#tools#Property ( s:SV_Toolbox, 'empty-menu' ) == 0
 		call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'sub_menu', '&Tool Box', 'priority', 900 )
 	endif
 
+	" sub-menu 'choose styles'
+	call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'specials_menu', '&Comments', 'do_styles' )
+
     "===============================================================================================
     "----- Menu : Comments                              {{{2
     "===============================================================================================
-    "
+
     let ahead = 'anoremenu <silent> '.s:SV_RootMenu.'.&Comments.'
     let vhead = 'vnoremenu <silent> '.s:SV_RootMenu.'.&Comments.'
     let ihead = 'inoremenu <silent> '.s:SV_RootMenu.'.&Comments.'
-    "
+
+    exe ahead.'-Sep01-                                                     <Nop>'
     exe ahead.'end-of-&line\ comment<Tab>'.esc_mapl.'cl                    :call SV_EndOfLineComment()<CR>'
     exe vhead.'end-of-&line\ comment<Tab>'.esc_mapl.'cl                    :call SV_EndOfLineComment()<CR>'
     exe ahead.'ad&just\ end-of-line\ com\.<Tab>'.esc_mapl.'cj              :call SV_AlignLineEndComm()<CR>'
     exe vhead.'ad&just\ end-of-line\ com\.<Tab>'.esc_mapl.'cj              :call SV_AlignLineEndComm()<CR>'
     exe ahead.'&set\ end-of-line\ com\.\ col\.<Tab>'.esc_mapl.'cs     <C-C>:call SV_GetLineEndCommCol()<CR>'
-    exe ahead.'-Sep01-                        <Nop>'
+    exe ahead.'-Sep02-                                                     <Nop>'
     exe ahead.'toggle\ &comment<Tab>'.esc_mapl.'cc                         :call SV_CommentToggle()<CR>j'
     exe ihead.'toggle\ &comment<Tab>'.esc_mapl.'cc                    <C-C>:call SV_CommentToggle()<CR>j'
     exe vhead.'toggle\ &comment<Tab>'.esc_mapl.'cc                         :call SV_CommentToggle()<CR>j'
@@ -519,16 +523,8 @@ function! s:SV_InitMenus ()
     exe ihead.'comment\ &block<Tab>'.esc_mapl.'cb                     <C-C>:call SV_CommentBlock("a")<CR>'
     exe vhead.'comment\ &block<Tab>'.esc_mapl.'cb                     <C-C>:call SV_CommentBlock("v")<CR>'
     exe ahead.'u&ncomment\ block<Tab>'.esc_mapl.'cub                       :call SV_UncommentBlock()<CR>'
-	exe ahead.'-Sep02-						<Nop>'
-    " comments 
-    " Works, but creates menu called "Run" 
-    " call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'sub_menu', '&Comments.&Change Comment Style', 'priority', 900 , 'do_styles')
-    " call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'sub_menu', '&Comments.&Change Comment Style', 'specials_menu', 'Chicken' , 'do_styles')
-    " These sort of work. They build the menus, but the items don't seem to
-    " actually switch the style.
-    " exe ahead.'&Change\ Comment\ Style.NaturalDocs   :call mmtemplates#core#Resource ( g:SV_Templates, "set", "property", "Templates::ChooseStyle::Map", "NaturalDocs" )<CR>'
-    " exe ahead.'&Change\ Comment\ Style.NTS           :call mmtemplates#core#Resource ( g:SV_Templates, "set", "property", "Templates::ChooseStyle::Map", "nts" )<CR>'
-    " exe ahead.'&Change\ Comment\ Style.Default       :call mmtemplates#core#Resource ( g:SV_Templates, "set", "property", "Templates::ChooseStyle::Map", "default" )<CR>'
+    exe ahead.'-Sep03-                                                     <Nop>'
+
     "===============================================================================================
     "----- Menu : GENERATE MENU ITEMS FROM THE TEMPLATES                              {{{2
     "===============================================================================================
@@ -593,7 +589,7 @@ function! s:SV_RereadTemplates ( displaymsg )
     endif
     "
     " map: choose style
-    call mmtemplates#core#Resource ( g:SV_Templates, 'set', 'property', 'Templates::ChooseStyle::Map', 'NaturalDocs' )
+    call mmtemplates#core#Resource ( g:SV_Templates, 'set', 'property', 'Templates::ChooseStyle::Map', 'nts' )
     "
     " syntax: comments
     call mmtemplates#core#ChangeSyntax ( g:SV_Templates, 'comment', '§' )
@@ -813,25 +809,20 @@ function! s:CreateAdditionalMaps ()
 "    inoremap    <buffer>  <silent>  <LocalLeader>nw    <Esc>:call SV_CodeSnippet("write")<CR>
 "    inoremap    <buffer>  <silent>  <LocalLeader>ne    <Esc>:call SV_CodeSnippet("edit")<CR>
 "    inoremap    <buffer>  <silent>  <LocalLeader>nv    <Esc>:call SV_CodeSnippet("view")<CR>
-    "
-"    nnoremap    <buffer>  <silent> <LocalLeader>ntl       :call mmtemplates#core#EditTemplateFiles(g:SV_Templates,-1)<CR>
-"    inoremap    <buffer>  <silent> <LocalLeader>ntl  <C-C>:call mmtemplates#core#EditTemplateFiles(g:SV_Templates,-1)<CR>
-"    if g:SV_Installation == 'system'
-"        nnoremap    <buffer>  <silent> <LocalLeader>ntg       :call mmtemplates#core#EditTemplateFiles(g:SV_Templates,0)<CR>
-"        inoremap    <buffer>  <silent> <LocalLeader>ntg  <C-C>:call mmtemplates#core#EditTemplateFiles(g:SV_Templates,0)<CR>
-"    endif
-"    nnoremap    <buffer>  <silent> <LocalLeader>ntr       :call mmtemplates#core#ReadTemplates(g:SV_Templates,"reload","all")<CR>
-"    inoremap    <buffer>  <silent> <LocalLeader>ntr  <C-C>:call mmtemplates#core#ReadTemplates(g:SV_Templates,"reload","all")<CR>
-    nnoremap    <buffer>  <silent> <LocalLeader>nts       :call mmtemplates#core#ChooseStyle(g:SV_Templates,"!pick")<CR>
-    inoremap    <buffer>  <silent> <LocalLeader>nts  <C-C>:call mmtemplates#core#ChooseStyle(g:SV_Templates,"!pick")<CR>
-    "
-    "
-	" ----------------------------------------------------------------------------
-	"
+
+	"-------------------------------------------------------------------------------
+	" templates
+	"-------------------------------------------------------------------------------
+
 	if !exists("g:SV_Ctrl_j") || ( exists("g:SV_Ctrl_j") && g:SV_Ctrl_j != 'off' )
 		nnoremap    <buffer>  <silent>  <C-j>    i<C-R>=SV_JumpCtrlJ()<CR>
 		inoremap    <buffer>  <silent>  <C-j>     <C-R>=SV_JumpCtrlJ()<CR>
 	endif
+
+	" create the maps for the templates
+	" and the 'specials': edit/reload templates, set style, and setup wizard
+	call mmtemplates#core#CreateMaps ( 'g:SV_Templates', g:SV_MapLeader, 'do_special_maps' ) |
+
     "-------------------------------------------------------------------------------
     " tool box
     "-------------------------------------------------------------------------------
@@ -893,7 +884,6 @@ if has("autocmd")
                 \            endif |
                 \        endif |
                 \        call s:CreateAdditionalMaps() |
-                \        call mmtemplates#core#CreateMaps ( 'g:SV_Templates', g:SV_MapLeader ) |
                 \    endif
     "
     autocmd BufNewFile,BufRead *.sv    setlocal  filetype=verilog_systemverilog
@@ -910,3 +900,7 @@ if has("autocmd")
     "
 "    exe 'autocmd BufNewFile,BufReadPost  '.s:SV_PerlModuleList.' setlocal foldmethod=expr | setlocal foldexpr=SV_ModuleListFold(v:lnum)'
 endif
+
+" }}}1
+
+" vim: tabstop=4 shiftwidth=4 foldmethod=marker
