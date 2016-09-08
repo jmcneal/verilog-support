@@ -208,4 +208,76 @@ class |?DRIVER_TYPE|_driver extends uvm_driver #(|DRIVER_TYPE|_seq_item);
     endtask : drive_packet
 
 endclass : |DRIVER_TYPE|_driver
+== UVM.Classes.Layering == 
+|Insert( 'Comments.Class description', '<CURSOR>')|
+class |?UPPER|_to_|?LOWER|_layering extends uvm_subscriber #(|LOWER|_seq_item);
+    `uvm_component_utils( |UPPER|_to_|LOWER|_layering )
+ 
+    |Insert( 'Comments.Variable', '|VARNAME|', '|UPPER|_sequencer', '|PURPOSE|', 'Upper layer sequencer to start sequences on')|
+    |UPPER:u|_sequencer |UPPER|_sequencer;
+
+    |Insert( 'Comments.Variable', '|VARNAME|', 'lower_agent', '|PURPOSE|', 'Pointer to lower  layer agent')|
+    |LOWER|_agent lower_agent;
+ 
+    |Insert( 'Comments.Constructor')|
+    function new(string name, uvm_component parent=null);
+        super.new(name, parent);
+    endfunction
+ 
+    |Insert( 'Comments.Function', '|METHODNAME|', 'build_phase' )|
+    function void build_phase(uvm_phase phase);
+        |UPPER|_sequencer = |UPPER:u|_sequencer::type_id::create("|UPPER|_sequencer",this);
+    endfunction
+
+    |Insert( 'Comments.Task', '|METHODNAME|', 'run_phase' )|
+    virtual task run_phase(uvm_phase phase);
+        // AtoB_seq a2b_seq;
+        |UPPER|_to_|LOWER|_seq b2c_seq;
+    
+        // a2b_seq = AtoB_seq::type_id::create("a2b_seq");
+        b2c_seq = |UPPER|_to_|LOWER|_seq::type_id::create("b2c_seq");
+    
+        // connect translation sequences to their respective upstream sequencers
+        // a2b_seq.up_sequencer = a_sequencer;
+        b2c_seq.up_sequencer = b_sequencer;
+    
+        // start the translation sequences
+        fork
+            // a2b_seq.start(b_sequencer);
+            b2c_seq.start(lower_agent.seqr);
+        join_none
+  endtask
+
+endclass
+== UVM.Classes.Translator Sequence ==
+class |?UPPER|_to_|?LOWER|_seq extends uvm_sequence #(|LOWER|_item);
+    `uvm_object_utils(|UPPER|_to_|LOWER|_seq)
+ 
+    |Insert( 'Comments.Constructor')|
+    function new(string name="");
+        super.new(name);
+    endfunction
+    
+    |Insert( 'Comments.Variable', '|VARNAME|', 'up_sequencer', '|PURPOSE|', 'Upper layer sequencer to start sequences on')|
+    uvm_sequencer #(|UPPER|_item) up_sequencer; 
+    
+    |Insert( 'Comments.Task', '|METHODNAME|', 'body' )|
+    virtual task body();
+        |UPPER|_item upper_item;
+        |LOWER|_item down_item;
+        int i;
+        forever begin
+            up_sequencer.get_next_item(upper_item);
+            foreach (upper_item.fb[i]) begin
+                down_item = |LOWER|_item::type_id::create();
+    
+                start_item(down_item);
+                // down_item.fc = upper_item.fb[i];
+                <-CONVERT UPPER TO LOWER->
+                finish_item(down_item);
+            end
+            up_sequencer.item_done();
+        end
+    endtask
+endclass
 == ENDTEMPLATE ==
