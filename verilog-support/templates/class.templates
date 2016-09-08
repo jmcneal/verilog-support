@@ -14,28 +14,29 @@
 §   |Insert( 'Comments.Function', '<CURSOR>' )|
 
 == UVM.Classes.Sequence Item == map:csi, sc:i, noindent == 
-|Insert( 'Comments.Class description', '<CURSOR>')|
-class |?CLASS_NAME| extends uvm_sequence_item;
+|Insert( 'Comments.Class description', '|CLASS_NAME|', '|?TYPE|_seq_item', '<CURSOR>')|
+class |TYPE|_seq_item extends uvm_sequence_item;
     // Variables
 
-    `uvm_object_utils_begin(|CLASS_NAME|)
+    `uvm_object_utils_begin(|TYPE|_seq_item)
     `uvm_object_utils_end
 
     // Constraints
 
     |Insert( 'Comments.Constructor')|
-    function new(input string name="|CLASS_NAME|");
+    function new(input string name="|TYPE|_seq_item");
         super.new(name);
     endfunction
 
     |Insert( 'Comments.Task', '|METHODNAME|', 'convert2string', '<CURSOR>' )|
     virtual function string convert2string();
         string s;
-        $sformat(s, "I'm a |CLASS_NAME|");
+        $sformat(s, "I'm a |TYPE|_seq_item");
         return s;
     endfunction
 
-endclass : |CLASS_NAME|
+endclass : |TYPE|_seq_item
+typedef uvm_sequencer#(|TYPE|_seq_item) |TYPE|_sequencer;
 == UVM.Classes.Sequence == map:cq, sc:s, noindent == 
 |Insert( 'Comments.Class description', '<CURSOR>')|
 class |CLASS_NAME| extends uvm_sequence #(|?SEQ_ITEM|);
@@ -208,13 +209,13 @@ class |?DRIVER_TYPE|_driver extends uvm_driver #(|DRIVER_TYPE|_seq_item);
     endtask : drive_packet
 
 endclass : |DRIVER_TYPE|_driver
-== UVM.Classes.Layering == 
+== UVM.Classes.Layer.Layering == 
 |Insert( 'Comments.Class description', '<CURSOR>')|
 class |?UPPER|_to_|?LOWER|_layering extends uvm_subscriber #(|LOWER|_seq_item);
     `uvm_component_utils( |UPPER|_to_|LOWER|_layering )
  
-    |Insert( 'Comments.Variable', '|VARNAME|', '|UPPER|_sequencer', '|PURPOSE|', 'Upper layer sequencer to start sequences on')|
-    |UPPER:u|_sequencer |UPPER|_sequencer;
+    |Insert( 'Comments.Variable', '|VARNAME|', '|UPPER|_seqr', '|PURPOSE|', 'Upper layer sequencer to start sequences on')|
+    |UPPER|_sequencer |UPPER|_seqr;
 
     |Insert( 'Comments.Variable', '|VARNAME|', 'lower_agent', '|PURPOSE|', 'Pointer to lower  layer agent')|
     |LOWER|_agent lower_agent;
@@ -226,7 +227,7 @@ class |?UPPER|_to_|?LOWER|_layering extends uvm_subscriber #(|LOWER|_seq_item);
  
     |Insert( 'Comments.Function', '|METHODNAME|', 'build_phase' )|
     function void build_phase(uvm_phase phase);
-        |UPPER|_sequencer = |UPPER:u|_sequencer::type_id::create("|UPPER|_sequencer",this);
+        |UPPER|_seqr = |UPPER|_sequencer::type_id::create("|UPPER|_seqr",this);
     endfunction
 
     |Insert( 'Comments.Task', '|METHODNAME|', 'run_phase' )|
@@ -249,8 +250,9 @@ class |?UPPER|_to_|?LOWER|_layering extends uvm_subscriber #(|LOWER|_seq_item);
   endtask
 
 endclass
-== UVM.Classes.Translator Sequence ==
-class |?UPPER|_to_|?LOWER|_seq extends uvm_sequence #(|LOWER|_item);
+== UVM.Classes.Layer.Translator Sequence ==
+|Insert( 'Comments.Class description', ,'|CLASSNAME|', '|?UPPER|_to_|?LOWER|_seq', '<CURSOR>')|
+class |UPPER|_to_|LOWER|_seq extends uvm_sequence #(|LOWER|_seq_item);
     `uvm_object_utils(|UPPER|_to_|LOWER|_seq)
  
     |Insert( 'Comments.Constructor')|
@@ -259,23 +261,21 @@ class |?UPPER|_to_|?LOWER|_seq extends uvm_sequence #(|LOWER|_item);
     endfunction
     
     |Insert( 'Comments.Variable', '|VARNAME|', 'up_sequencer', '|PURPOSE|', 'Upper layer sequencer to start sequences on')|
-    uvm_sequencer #(|UPPER|_item) up_sequencer; 
+    uvm_sequencer #(|UPPER|_seq_item) up_sequencer; 
     
     |Insert( 'Comments.Task', '|METHODNAME|', 'body' )|
     virtual task body();
-        |UPPER|_item upper_item;
-        |LOWER|_item down_item;
+        |UPPER|_seq_item upper_item;
+        |LOWER|_seq_item down_item;
         int i;
         forever begin
             up_sequencer.get_next_item(upper_item);
-            foreach (upper_item.fb[i]) begin
-                down_item = |LOWER|_item::type_id::create();
+            down_item = |LOWER|_seq_item::type_id::create();
     
-                start_item(down_item);
-                // down_item.fc = upper_item.fb[i];
-                <-CONVERT UPPER TO LOWER->
-                finish_item(down_item);
-            end
+            start_item(down_item);
+            // down_item <== upper_item;
+            // <-CONVERT UPPER TO LOWER->
+            finish_item(down_item);
             up_sequencer.item_done();
         end
     endtask
