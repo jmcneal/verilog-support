@@ -13,6 +13,50 @@
 § template using the '<CURSOR>' option:
 §   |Insert( 'Comments.Function', '<CURSOR>' )|
 
+== UVM.Classes.Test == 
+|Insert( 'Comments.Class description', '|CLASS_NAME|', '|?TEST|_test', '<CURSOR>' )|
+class |TEST|_test extends base_test;
+    `uvm_component_utils( |TEST|_test )
+
+    |Insert( 'Comments.Constructor')|
+    function new(input string name="|TEST|_test", uvm_component parent);
+        super.new(name, parent);
+    endfunction
+
+    |Insert( 'Comments.Task', '|METHODNAME|', 'run_phase' )|
+    virtual task run_phase(uvm_phase phase);
+        random_sequence seq;
+        super.run_phase(phase);
+
+        phase.raise_objection(this);
+        seq = random_sequence::type_id::create("seq");
+        seq.start(env.agent.seqr);
+        phase.drop_objection(this);
+    endfunction : run_phase
+
+endclass : |TEST|_test
+== UVM.Classes.Sequence == map:cq, sc:s, noindent == 
+|Insert( 'Comments.Class description', '<CURSOR>')|
+class |CLASS_NAME| extends uvm_sequence #(|?SEQ_ITEM|);
+
+    `uvm_object_utils(|CLASS_NAME|)
+
+    |Insert( 'Comments.Constructor')|
+    function new(input string name="|CLASS_NAME|");
+        super.new(name);
+    endfunction
+
+    |Insert( 'Comments.Task', '|METHODNAME|', 'body' )|
+    virtual task body();
+        |SEQ_ITEM| req;
+
+        req = |SEQ_ITEM|::type_id::create("req");
+        start_item(req);
+        if(!req.randomize()) `uvm_fatal(get_name(), "Failed to randomize")
+        finish_item(req);
+    endtask
+
+endclass : |CLASS_NAME|
 == UVM.Classes.Sequence Item == map:csi, sc:i, noindent == 
 |Insert( 'Comments.Class description', '|CLASS_NAME|', '|?TYPE|_seq_item', '<CURSOR>')|
 class |TYPE|_seq_item extends uvm_sequence_item;
@@ -37,28 +81,6 @@ class |TYPE|_seq_item extends uvm_sequence_item;
 
 endclass : |TYPE|_seq_item
 typedef uvm_sequencer#(|TYPE|_seq_item) |TYPE|_sequencer;
-== UVM.Classes.Sequence == map:cq, sc:s, noindent == 
-|Insert( 'Comments.Class description', '<CURSOR>')|
-class |CLASS_NAME| extends uvm_sequence #(|?SEQ_ITEM|);
-
-    `uvm_object_utils(|CLASS_NAME|)
-
-    |Insert( 'Comments.Constructor')|
-    function new(input string name="|CLASS_NAME|");
-        super.new(name);
-    endfunction
-
-    |Insert( 'Comments.Task', '|METHODNAME|', 'convert2string', '<CURSOR>' )|
-    virtual task body();
-        |SEQ_ITEM| req;
-
-        req = |SEQ_ITEM|::type_id::create("req");
-        start_item(req);
-        if(!req.randomize()) `uvm_fatal(get_name(), "Failed to randomize")
-        finish_item(req);
-    endtask
-
-endclass : |CLASS_NAME|
 == UVM.Classes.Agent == map:ca, sc:a, noindent == 
 |Insert( 'Comments.Class description', '<CURSOR>')|
 class |?AGENT_TYPE|_agent extends uvm_agent;
@@ -130,7 +152,7 @@ class |?MON_TYPE|_monitor extends uvm_monitor;
         data_clone = |MON_TYPE|_seq_item::type_id::create("data_clone");
     endfunction : build_phase
 
-    |Insert( 'Comments.Task', '|METHODNAME|', 'convert2string', '<CURSOR>' )|
+    |Insert( 'Comments.Task', '|METHODNAME|', 'run_phse', '<CURSOR>' )|
     virtual task run_phase(uvm_phase phase);
         fork
             collect_data();
@@ -138,7 +160,7 @@ class |?MON_TYPE|_monitor extends uvm_monitor;
         join_none
     endtask : run_phase
 
-    |Insert( 'Comments.Task', '|METHODNAME|', 'convert2string', '<CURSOR>' )|
+    |Insert( 'Comments.Task', '|METHODNAME|', 'collect_data', '<CURSOR>' )|
     virtual task collect_data();
         forever begin
             <-ACCESS_VIF_CODE->
@@ -209,7 +231,7 @@ class |?DRIVER_TYPE|_driver extends uvm_driver #(|DRIVER_TYPE|_seq_item);
     endtask : drive_packet
 
 endclass : |DRIVER_TYPE|_driver
-== UVM.Classes.Layer.Layering == 
+== UVM.Classes.Layer.Subscriber Layering == 
 |Insert( 'Comments.Class description', '<CURSOR>')|
 class |?UPPER|_to_|?LOWER|_layering extends uvm_subscriber #(|LOWER|_seq_item);
     `uvm_component_utils( |UPPER|_to_|LOWER|_layering )
@@ -220,6 +242,9 @@ class |?UPPER|_to_|?LOWER|_layering extends uvm_subscriber #(|LOWER|_seq_item);
     |Insert( 'Comments.Variable', '|VARNAME|', 'lower_agent', '|PURPOSE|', 'Pointer to lower  layer agent')|
     |LOWER|_agent lower_agent;
  
+    |Insert( 'Comments.Variable', '|VARNAME|', 'ap', '|PURPOSE|', 'Analysis port to pass item up')|
+    uvm_analysis_port#(|UPPER|_seq_item) ap;
+
     |Insert( 'Comments.Constructor')|
     function new(string name, uvm_component parent=null);
         super.new(name, parent);
@@ -240,18 +265,69 @@ class |?UPPER|_to_|?LOWER|_layering extends uvm_subscriber #(|LOWER|_seq_item);
     
         // connect translation sequences to their respective upstream sequencers
         // a2b_seq.up_sequencer = a_sequencer;
-        b2c_seq.up_sequencer = b_sequencer;
+        b2c_seq.up_sequencer = |UPPER|_seqr;
     
         // start the translation sequences
         fork
             // a2b_seq.start(b_sequencer);
             b2c_seq.start(lower_agent.seqr);
         join_none
-  endtask
+    endtask
 
-endclass
+    |Insert( 'Comments.Function', '|METHODNAME|', 'write')|
+    function void write( |LOWER|_seq_item t);
+        |UPPER|_seq_item upper_item;
+        // <-Create Upper from Lower->
+        ap.write(upper_item);
+    endfunction
+    
+endclass : |UPPER|_to_|LOWER|_layering
+== UVM.Classes.Layer.Component Layering == 
+|Insert( 'Comments.Class description', '<CURSOR>')|
+class |?UPPER|_to_|?LOWER|_layering extends uvm_component;
+    `uvm_component_utils( |UPPER|_to_|LOWER|_layering )
+ 
+    |Insert( 'Comments.Variable', '|VARNAME|', '|UPPER|_seqr', '|PURPOSE|', 'Upper layer sequencer to start sequences on')|
+    |UPPER|_sequencer |UPPER|_seqr;
+
+    |Insert( 'Comments.Variable', '|VARNAME|', 'lower_agent', '|PURPOSE|', 'Pointer to lower  layer agent')|
+    |LOWER|_agent lower_agent;
+ 
+    |Insert( 'Comments.Variable', '|VARNAME|', 'ap', '|PURPOSE|', 'Analysis port to pass item up')|
+    uvm_analysis_port#(|UPPER|_seq_item) ap;
+
+    |Insert( 'Comments.Constructor')|
+    function new(string name, uvm_component parent=null);
+        super.new(name, parent);
+    endfunction
+ 
+    |Insert( 'Comments.Function', '|METHODNAME|', 'build_phase' )|
+    function void build_phase(uvm_phase phase);
+        |UPPER|_seqr = |UPPER|_sequencer::type_id::create("|UPPER|_seqr",this);
+    endfunction
+
+    |Insert( 'Comments.Task', '|METHODNAME|', 'run_phase' )|
+    virtual task run_phase(uvm_phase phase);
+        // AtoB_seq a2b_seq;
+        |UPPER|_to_|LOWER|_seq b2c_seq;
+    
+        // a2b_seq = AtoB_seq::type_id::create("a2b_seq");
+        b2c_seq = |UPPER|_to_|LOWER|_seq::type_id::create("b2c_seq");
+    
+        // connect translation sequences to their respective upstream sequencers
+        // a2b_seq.up_sequencer = a_sequencer;
+        b2c_seq.up_sequencer = |UPPER|_seqr;
+    
+        // start the translation sequences
+        fork
+            // a2b_seq.start(b_sequencer);
+            b2c_seq.start(lower_agent.seqr);
+        join_none
+    endtask
+
+endclass : |UPPER|_to_|LOWER|_layering
 == UVM.Classes.Layer.Translator Sequence ==
-|Insert( 'Comments.Class description', ,'|CLASSNAME|', '|?UPPER|_to_|?LOWER|_seq', '<CURSOR>')|
+|Insert( 'Comments.Class description' ,'|CLASS_NAME|', '|?UPPER|_to_|?LOWER|_seq', '<CURSOR>')|
 class |UPPER|_to_|LOWER|_seq extends uvm_sequence #(|LOWER|_seq_item);
     `uvm_object_utils(|UPPER|_to_|LOWER|_seq)
  
@@ -279,5 +355,27 @@ class |UPPER|_to_|LOWER|_seq extends uvm_sequence #(|LOWER|_seq_item);
             up_sequencer.item_done();
         end
     endtask
-endclass
+endclass : |UPPER|_to_|LOWER|_seq
+== UVM.Classes.Test == 
+|Insert( 'Comments.Class description', '|CLASS_NAME|', '|?TEST|_test', '<CURSOR>' )|
+class |TEST|_test extends base_test;
+    `uvm_component_utils( |TEST|_test )
+
+    |Insert( 'Comments.Constructor')|
+    function new(input string name="|TEST|_test", uvm_component parent);
+        super.new(name, parent);
+    endfunction
+
+    |Insert( 'Comments.Task', '|METHODNAME|', 'run_phase' )|
+    virtual task run_phase(uvm_phase phase);
+        random_sequence seq;
+        super.run_phase(phase);
+
+        phase.raise_objection(this);
+        seq = random_sequence::type_id::create("seq");
+        seq.start(env.agent.seqr);
+        phase.drop_objection(this);
+    endfunction : run_phase
+
+endclass : |TEST|_test
 == ENDTEMPLATE ==

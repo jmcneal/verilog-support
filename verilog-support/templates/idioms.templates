@@ -16,8 +16,12 @@ uvm_config_db#(<CURSOR>)::get(this,"", "var_name", var);
 `uvm_component_utils_end
 == UVM.Idioms.uvm_field_int == map:ufi ==
     `uvm_field_int(<CURSOR>, UVM_DEFAULT)
+== UVM.Idioms.uvm_field_string == map:ufs ==
+    `uvm_field_string(<CURSOR>, UVM_DEFAULT)
 == UVM.Idioms.uvm_field_enum == map:ufe ==
     `uvm_field_enum(<CURSOR>, <-ENUM_VAR->, UVM_DEFAULT)
+== UVM.Idioms.uvm_field_real == map:ufr ==
+    `uvm_field_real(<CURSOR>, UVM_DEFAULT)
 == UVM.Idioms.analysis_port == map:isu == 
     uvm_analysis_port #(|?TYPE|) <CURSOR>_ap; // output a |TYPE|
 == UVM.Idioms.analysis_export == map:isu == 

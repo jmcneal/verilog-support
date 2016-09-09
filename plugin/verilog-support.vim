@@ -97,9 +97,6 @@ let s:SV_ToolboxDir  = []
                     "  \    $HOME.'/.vim/autoload/mmtoolbox/' ]
     endif
     "
-    " let s:SV_Perl                     = '/usr/bin/perl'
-    " let g:SV_FilenameEscChar            = ' \%#[]'
-    "
     " ==============================================================================
 "endif
 
@@ -233,7 +230,7 @@ function! SV_AlignLineEndComm ( ) range
     let cc = '//'                     " start of a Verilog comment
     "
     " patterns to ignore when adjusting line-end comments (may be incomplete):
-     let align_regex    = join( s:AlignRegex, '\|' )
+    let align_regex    = join( s:AlignRegex, '\|' )
     "
     " local position
     if !exists( 'b:SV_LineEndCommentColumn' )
@@ -404,15 +401,9 @@ function! SV_UncommentBlock ()
   if lastline+1<line("$") && match( getline(lastline+1), '^\s*$' ) != -1
     let line2 = line2+1
   endif
-  "if lastline+2<line("$") && match( getline(lastline+2), '^=cut' ) != -1
   if lastline+1<line("$") && match( getline(lastline+1), '^\*\/' ) != -1
     let line2 = line2+1
   endif
-"  if lastline+3<line("$") && match( getline(lastline+3), '^\s*$' ) != -1
-  " empty line after */
-"  if lastline+2<line("$") && match( getline(lastline+2), '^\s*$' ) != -1
-"    let line2 = line2+1
-"  endif
   silent exe ':'.line1.','.line2.'d'
 
   let line1 = frstline
@@ -720,18 +711,6 @@ endfunction    " ----------  end of function SV_HelpSupport ----------
 "===============================================================================
 function! s:CreateAdditionalMaps ()
     "
-"    if exists('g:SV_Perltidy') && g:SV_Perltidy == 'on' && executable("perltidy")
-"        setlocal equalprg='perltidy'
-"    endif
-    "
-    " ---------- Perl dictionary -------------------------------------------------
-    " This will enable keyword completion for Perl
-    " using Vim's dictionary feature |i_CTRL-X_CTRL-K|.
-    "
-"    if exists("g:SV_Dictionary_File")
-"        silent! exe 'setlocal dictionary+='.g:SV_Dictionary_File
-"    endif
-    "
     "-------------------------------------------------------------------------------
     " USER DEFINED COMMANDS
     "-------------------------------------------------------------------------------
@@ -771,14 +750,14 @@ function! s:CreateAdditionalMaps ()
     "
     " ---------- plugin help -----------------------------------------------------
     "
-    "noremap    <buffer>  <silent>  <LocalLeader>hp         :call SV_HelpSupport()<CR>
-    "inoremap   <buffer>  <silent>  <LocalLeader>hp    <C-C>:call SV_HelpSupport()<CR>
+    noremap    <buffer>  <silent>  <LocalLeader>hp         :call SV_HelpSupport()<CR>
+    inoremap   <buffer>  <silent>  <LocalLeader>hp    <C-C>:call SV_HelpSupport()<CR>
     "
     " ----------------------------------------------------------------------------
     " Comments
     " ----------------------------------------------------------------------------
     "
-     noremap    <buffer>  <silent>  <LocalLeader>cl         :call SV_EndOfLineComment()<CR>
+    noremap     <buffer>  <silent>  <LocalLeader>cl         :call SV_EndOfLineComment()<CR>
     inoremap    <buffer>  <silent>  <LocalLeader>cl    <C-C>:call SV_EndOfLineComment()<CR>
     "
     nnoremap    <buffer>  <silent>  <LocalLeader>cj         :call SV_AlignLineEndComm()<CR>
@@ -897,8 +876,7 @@ if has("autocmd")
     "
     " Wrap error descriptions in the quickfix window.
     autocmd BufReadPost quickfix  setlocal wrap | setlocal linebreak
-    "
-"    exe 'autocmd BufNewFile,BufReadPost  '.s:SV_PerlModuleList.' setlocal foldmethod=expr | setlocal foldexpr=SV_ModuleListFold(v:lnum)'
+
 endif
 
 " }}}1

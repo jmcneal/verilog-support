@@ -13,15 +13,15 @@
 
 == Comments.end-of-line-comment == append, nomenu ==
 // <CURSOR>
-== Comments.Task == map:ct, insert ==
+== Comments.Task == map:ct ==
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Task: |?METHODNAME|
 // <CURSOR>
-== Comments.Function == map:cf, insert ==
+== Comments.Function == map:cf ==
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Function: |?METHODNAME|
 // <CURSOR>
-== Comments.Constructor == map:cons, insert ==
+== Comments.Constructor == map:cons ==
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Constructor: new
 == Comments.Class description == map:chsv, start, above, noindent ==
