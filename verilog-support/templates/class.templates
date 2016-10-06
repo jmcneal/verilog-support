@@ -408,8 +408,8 @@ class |TYPE|_scoreboard extends uvm_scoreboard;
     `uvm_object_utils(|TYPE|_scoreboard)
 
     |Insert( 'Comments.Constructor')|
-    function new(string name="|TYPE|_scoreboard");
-        super.new(name);
+    function new(input string name="|TYPE|_scoreboard", uvm_component parent);
+        super.new(name, parent);
         expect_data_fifo = new("expect_data_fifo");
         actual_data_fifo = new("actual_data_fifo");
     endfunction
@@ -437,8 +437,8 @@ class |TYPE|_predictor extends uvm_subscriber #(|?INPUT_TYPE|);
     `uvm_object_utils(|TYPE|_predictor)
 
     |Insert( 'Comments.Constructor')|
-    function new(string name="|TYPE|_predictor");
-        super.new(name);
+    function new(input string name="|TYPE|_predictor", uvm_component parent);
+        super.new(name, parent);
         predicted_ap = new("predicted_ap");
     endfunction
     
