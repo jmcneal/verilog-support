@@ -378,4 +378,76 @@ class |TEST|_test extends base_test;
     endfunction : run_phase
 
 endclass : |TEST|_test
+== UVM.Classes.Config ==
+|Insert( 'Comments.Class description', '|CLASS_NAME|', '|?TYPE|_config', '<CURSOR>' )|
+class |TYPE|_config extends uvm_object;
+    `uvm_object_utils(|TYPE|_config)
+
+    |Insert( 'Comments.Constructor')|
+    function new(string name="|TYPE|_config");
+        super.new(name);
+    endfunction
+    
+    |Insert( 'Comments.Task', '|METHODNAME|', 'convert2string', '<CURSOR>' )|
+    virtual function string convert2string();
+        string s;
+        $sformat(s, "I'm a |TYPE|_config");
+        return s;
+    endfunction
+
+endclass : |TYPE|_config
+== UVM.Classes.Scoreboard ==
+|Insert( 'Comments.Class description', '|CLASS_NAME|', '|?TYPE|_scoreboard', '<CURSOR>' )|
+class |TYPE|_scoreboard extends uvm_scoreboard;
+    uvm_tlm_analysis_fifo #(|TYPE|_seq_item) expect_data_fifo;
+    uvm_tlm_analysis_fifo #(|TYPE|_seq_item) actual_data_fifo;
+
+    |TYPE|_seq_item expect_data;
+    |TYPE|_seq_item actual_data;
+
+    `uvm_object_utils(|TYPE|_scoreboard)
+
+    |Insert( 'Comments.Constructor')|
+    function new(string name="|TYPE|_scoreboard");
+        super.new(name);
+        expect_data_fifo = new("expect_data_fifo");
+        actual_data_fifo = new("actual_data_fifo");
+    endfunction
+    
+    |Insert( 'Comments.Task', '|METHODNAME|', 'run_phase' )|
+    virtual task run_phase(uvm_phase phase);
+        super.run_phase(phase);
+        forever begin
+            expect_data_fifo.get(expect_data);
+            actual_data_fifo.get(actual_data);
+            expect_data.compare(actual_data);
+        end
+    endtask : run_phase
+
+endclass : |TYPE|_scoreboard
+== UVM.Classes.Predictor ==
+|Insert( 'Comments.Class description', '|CLASS_NAME|', '|?TYPE|_predictor', '<CURSOR>' )|
+class |TYPE|_predictor extends uvm_subscriber #(|?INPUT_TYPE|);
+
+    uvm_analysis_port #(|?OUTPUT_TYPE|) predicted_ap;
+
+    |TYPE|_seq_item expect_data;
+    |TYPE|_seq_item actual_data;
+
+    `uvm_object_utils(|TYPE|_predictor)
+
+    |Insert( 'Comments.Constructor')|
+    function new(string name="|TYPE|_predictor");
+        super.new(name);
+        predicted_ap = new("predicted_ap");
+    endfunction
+    
+    |Insert( 'Comments.Function', '|METHODNAME|', 'write')|
+    function void write( |INPUT_TYPE| t);
+        |OUTPUT_TYPE| out_item;
+        // <-Create Upper from Lower->
+        predicted_ap.write(out_item);
+    endfunction
+
+endclass : |TYPE|_predictor
 == ENDTEMPLATE ==
