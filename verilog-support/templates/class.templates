@@ -32,7 +32,7 @@ class |TEST|_test extends base_test;
         seq = random_sequence::type_id::create("seq");
         seq.start(env.agent.seqr);
         phase.drop_objection(this);
-    endfunction : run_phase
+    endtask : run_phase
 
 endclass : |TEST|_test
 == UVM.Classes.Sequence == map:cq, sc:s, noindent == 
@@ -405,7 +405,7 @@ class |TYPE|_scoreboard extends uvm_scoreboard;
     |TYPE|_seq_item expect_data;
     |TYPE|_seq_item actual_data;
 
-    `uvm_object_utils(|TYPE|_scoreboard)
+    `uvm_component_utils( |TYPE|_scoreboard )
 
     |Insert( 'Comments.Constructor')|
     function new(input string name="|TYPE|_scoreboard", uvm_component parent);
@@ -431,10 +431,7 @@ class |TYPE|_predictor extends uvm_subscriber #(|?INPUT_TYPE|);
 
     uvm_analysis_port #(|?OUTPUT_TYPE|) predicted_ap;
 
-    |TYPE|_seq_item expect_data;
-    |TYPE|_seq_item actual_data;
-
-    `uvm_object_utils(|TYPE|_predictor)
+    `uvm_component_utils( |TYPE|_predictor )
 
     |Insert( 'Comments.Constructor')|
     function new(input string name="|TYPE|_predictor", uvm_component parent);
@@ -445,7 +442,7 @@ class |TYPE|_predictor extends uvm_subscriber #(|?INPUT_TYPE|);
     |Insert( 'Comments.Function', '|METHODNAME|', 'write')|
     function void write( |INPUT_TYPE| t);
         |OUTPUT_TYPE| out_item;
-        // <-Create Upper from Lower->
+        // <-Create an |OUTPUT_TYPE| from the |INPUT_TYPE| ->
         predicted_ap.write(out_item);
     endfunction
 
