@@ -1,3 +1,12 @@
+== Idioms.covergroup ==
+covergoup |?GROUP_NAME|;
+endcovergroup : |GROUP_NAME|
+== Idioms.Coverpoint bins ==
+coverpoint |?COVER_VARIABLE| {
+    bins low = {0,1};
+    bins med = {2,3};
+    bins hi  = {4,5};
+}
 == UVM.Idioms.configdb_set == map:cdbs, insert ==
 uvm_config_db#(<CURSOR>)::set(this,"", "var_name", var_value);
 == UVM.Idioms.configdb_get == map:cdbg, insert ==
@@ -30,4 +39,5 @@ uvm_config_db#(<CURSOR>)::get(this,"", "var_name", var);
 phase.raise_objection(this);
 <SPLIT>
 phase.drop_objection(this);
+
 == ENDTEMPLATE ==
