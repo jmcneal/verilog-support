@@ -488,8 +488,10 @@ function! s:SV_InitMenus ()
 		call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'sub_menu', '&Tool Box', 'priority', 900 )
 	endif
 
-	" sub-menu 'choose styles'
-	call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'specials_menu', '&Comments', 'do_styles' )
+    "===============================================================================================
+    "----- Menu : GENERATE MENU ITEMS FROM THE TEMPLATES                              {{{2
+    "===============================================================================================
+    call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'do_templates' )
 
     "===============================================================================================
     "----- Menu : Comments                              {{{2
@@ -498,14 +500,14 @@ function! s:SV_InitMenus ()
     let ahead = 'anoremenu <silent> '.s:SV_RootMenu.'.&Comments.'
     let vhead = 'vnoremenu <silent> '.s:SV_RootMenu.'.&Comments.'
     let ihead = 'inoremenu <silent> '.s:SV_RootMenu.'.&Comments.'
-
-    exe ahead.'-Sep01-                                                     <Nop>'
+    "
+    exe ahead.'-Sep02-                                                     <Nop>'
     exe ahead.'end-of-&line\ comment<Tab>'.esc_mapl.'cl                    :call SV_EndOfLineComment()<CR>'
     exe vhead.'end-of-&line\ comment<Tab>'.esc_mapl.'cl                    :call SV_EndOfLineComment()<CR>'
     exe ahead.'ad&just\ end-of-line\ com\.<Tab>'.esc_mapl.'cj              :call SV_AlignLineEndComm()<CR>'
     exe vhead.'ad&just\ end-of-line\ com\.<Tab>'.esc_mapl.'cj              :call SV_AlignLineEndComm()<CR>'
     exe ahead.'&set\ end-of-line\ com\.\ col\.<Tab>'.esc_mapl.'cs     <C-C>:call SV_GetLineEndCommCol()<CR>'
-    exe ahead.'-Sep02-                                                     <Nop>'
+    exe ahead.'-Sep03-                                                     <Nop>'
     exe ahead.'toggle\ &comment<Tab>'.esc_mapl.'cc                         :call SV_CommentToggle()<CR>j'
     exe ihead.'toggle\ &comment<Tab>'.esc_mapl.'cc                    <C-C>:call SV_CommentToggle()<CR>j'
     exe vhead.'toggle\ &comment<Tab>'.esc_mapl.'cc                         :call SV_CommentToggle()<CR>j'
@@ -514,13 +516,10 @@ function! s:SV_InitMenus ()
     exe ihead.'comment\ &block<Tab>'.esc_mapl.'cb                     <C-C>:call SV_CommentBlock("a")<CR>'
     exe vhead.'comment\ &block<Tab>'.esc_mapl.'cb                     <C-C>:call SV_CommentBlock("v")<CR>'
     exe ahead.'u&ncomment\ block<Tab>'.esc_mapl.'cub                       :call SV_UncommentBlock()<CR>'
-    exe ahead.'-Sep03-                                                     <Nop>'
+    exe ahead.'-Sep01-                                                     <Nop>'
+	" sub-menu 'choose styles'
+	call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'specials_menu', '&Comments', 'do_styles' )
 
-    "===============================================================================================
-    "----- Menu : GENERATE MENU ITEMS FROM THE TEMPLATES                              {{{2
-    "===============================================================================================
-    call mmtemplates#core#CreateMenus ( 'g:SV_Templates', s:SV_RootMenu, 'do_templates' )
-    "
     "----- Menu : Tools                            {{{2
     "===============================================================================================
 	"
