@@ -1,12 +1,19 @@
 == Idioms.covergroup ==
 covergoup |?GROUP_NAME|;
 endcovergroup : |GROUP_NAME|
+== Idioms.Covergroup Sample ==
+covergoup |?GROUP_NAME| with function sample(input int var);
+    coverpoint var;
+endcovergroup : |GROUP_NAME|
 == Idioms.Coverpoint bins ==
 coverpoint |?COVER_VARIABLE| {
     bins low = {0,1};
     bins med = {2,3};
     bins hi  = {4,5};
 }
+== Idioms.Timeformat ==
+// Print time in nanoseconds(-9), 5 figs after decimal, label, field width of 10
+$timeformat(-9, 5, " ns", 10);
 == UVM.Idioms.configdb_set == map:cdbs, insert ==
 uvm_config_db#(<CURSOR>)::set(this,"", "var_name", var_value);
 == UVM.Idioms.configdb_get == map:cdbg, insert ==
@@ -31,6 +38,8 @@ uvm_config_db#(<CURSOR>)::get(this,"", "var_name", var);
     `uvm_field_enum(<CURSOR>, <-ENUM_VAR->, UVM_DEFAULT)
 == UVM.Idioms.uvm_field_real == map:ufr ==
     `uvm_field_real(<CURSOR>, UVM_DEFAULT)
+== UVM.Idioms.uvm_field_object == map:ufo ==
+    `uvm_field_object(<CURSOR>, UVM_DEFAULT)
 == UVM.Idioms.analysis_port == map:isu == 
     uvm_analysis_port #(|?TYPE|) <CURSOR>_ap; // output a |TYPE|
 == UVM.Idioms.analysis_export == map:isu == 
