@@ -1,3 +1,9 @@
+== Idioms.task ==
+virtual task |?METHODNAME| (<CURSOR>);
+endtask : |METHODNAME|
+== Idioms.function ==
+virtual function void |?METHODNAME| (<CURSOR>);
+endfunction : |METHODNAME|
 == Idioms.covergroup ==
 covergoup |?GROUP_NAME|;
 endcovergroup : |GROUP_NAME|
@@ -40,6 +46,16 @@ uvm_config_db#(<CURSOR>)::get(this,"", "var_name", var);
     `uvm_field_real(<CURSOR>, UVM_DEFAULT)
 == UVM.Idioms.uvm_field_object == map:ufo ==
     `uvm_field_object(<CURSOR>, UVM_DEFAULT)
+== UVM.Idioms.uvm_field_array_int == map:ufi ==
+    `uvm_field_array_int(<CURSOR>, UVM_DEFAULT)
+== UVM.Idioms.uvm_field_array_string == map:ufs ==
+    `uvm_field_array_string(<CURSOR>, UVM_DEFAULT)
+== UVM.Idioms.uvm_field_array_enum == map:ufe ==
+    `uvm_field_array_enum(<CURSOR>, <-ENUM_VAR->, UVM_DEFAULT)
+== UVM.Idioms.uvm_field_array_real == map:ufr ==
+    `uvm_field_array_real(<CURSOR>, UVM_DEFAULT)
+== UVM.Idioms.uvm_field_array_object == map:ufo ==
+    `uvm_field_array_object(<CURSOR>, UVM_DEFAULT)
 == UVM.Idioms.analysis_port == map:isu == 
     uvm_analysis_port #(|?TYPE|) <CURSOR>_ap; // output a |TYPE|
 == UVM.Idioms.analysis_export == map:isu == 
