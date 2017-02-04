@@ -8,9 +8,9 @@ endfunction : |METHODNAME|
 covergoup |?GROUP_NAME|;
 endcovergroup : |GROUP_NAME|
 == Idioms.Covergroup Sample ==
-covergoup |?GROUP_NAME| with function sample(input int var);
+covergroup |?GROUP_NAME| with function sample(input int var);
     coverpoint var;
-endcovergroup : |GROUP_NAME|
+endgroup : |GROUP_NAME|
 == Idioms.Coverpoint bins ==
 coverpoint |?COVER_VARIABLE| {
     bins low = {0,1};
