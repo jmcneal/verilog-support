@@ -47,7 +47,8 @@ plugin is an excellent choice.
 
 ## Release Notes
 
-The verilog-support plugin is still in its early stages, and being actively developed (on a part-time basis).
+The verilog-support plugin is still in its early stages, and being actively
+developed (on a part-time basis).
 
 ## Contact
 
