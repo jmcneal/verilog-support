@@ -15,7 +15,7 @@
 "       Version:  1.0
 "       Created:  08/02/2016 09:06
 "      Revision:  ---
-"       License:  TBD
+"       License:  GPL version 2
 "===============================================================================
 "
 " Prevent duplicate loading:
