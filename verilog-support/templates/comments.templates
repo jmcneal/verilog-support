@@ -54,6 +54,63 @@
 == ENDTEMPLATE ==
 == ENDSTYLES ==
 
+== USE STYLES : Doxygen ==
+== Comments.header ==
+//-------------------------------------------------------------------------------------------------
+// The information contained herein is Kandou Bus S.A. confidential
+// and proprietary information and is for use by Kandou Bus S.A.
+// customers only.  The information may not be reproduced or modified
+// in any form without the prior written of Kandou Bus S.A.
+// Kandou Bus S.A. reserves the right to make changes to the
+// information at any time without notice.
+//
+// |COPYRIGHT|
+//
+//-------------------------------------------------------------------------------------------------
+
+== Comments.end-of-line-comment == append, nomenu ==
+// <CURSOR>
+== Comments.Task == map:ct ==
+//-------------------------------------------------------------------------------------------------
+// Task: |?METHODNAME|
+// <CURSOR>
+== Comments.Function == map:cf ==
+//-------------------------------------------------------------------------------------------------
+// Function: |?METHODNAME|
+// <CURSOR>
+== Comments.Constructor == map:cons ==
+//-------------------------------------------------------------------------------------------------
+// Constructor: new
+== Comments.Class description == map:chsv, start, above, noindent ==
+//-------------------------------------------------------------------------------------------------
+/// @class |?CLASS_NAME|
+/// <CURSOR>
+/// 
+//         BUGS: ---
+//       AUTHOR: |AUTHOR| (|AUTHORREF|), |EMAIL|
+// ORGANIZATION: |ORGANIZATION|
+//      VERSION: 1.0
+//      CREATED: |DATE| |TIME|
+//     REVISION: ---
+//-------------------------------------------------------------------------------------------------
+== Comments.Module description == map:chv, start, above, noindent ==
+//-------------------------------------------------------------------------------------------------
+/// @Module: |?MODULE_NAME|
+///  <CURSOR>
+//
+//   IO SIGNALS: ---
+//       AUTHOR: |AUTHOR| (|AUTHORREF|), |EMAIL|
+// ORGANIZATION: |ORGANIZATION|
+//      VERSION: 1.0
+//      CREATED: |DATE| |TIME|
+//     REVISION: ---
+//-------------------------------------------------------------------------------------------------
+== Comments.Variable == map:cv ==
+// Variable: |?VARNAME|
+// |?Purpose|
+== ENDTEMPLATE ==
+== ENDSTYLES ==
+
 == USE STYLES : default ==
 == Comments.end-of-line-comment == append, nomenu ==
 // <CURSOR>
