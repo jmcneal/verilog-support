@@ -8,29 +8,29 @@ endfunction
 virtual function void build_phase(uvm_phase phase);
     super.build_phase(phase);
     <CURSOR>
-endfunction
+endfunction : build_phase
 == UVM.Phases.connect_phase == map:pc, sc:c == 
 |Insert( 'Comments.Function', '|METHODNAME|', 'connect_phase' )|
 virtual function void connect_phase(uvm_phase phase);
     super.connect_phase(phase);
     <CURSOR>
-endfunction
+endfunction : connect_phase
 == UVM.Phases.end_of_elaboration_phase == map:peoe == 
 |Insert( 'Comments.Function', '|METHODNAME|', 'end_of_elaboration_phase' )|
 virtual function void end_of_elaboration_phase(uvm_phase phase);
     <CURSOR>
-endfunction
+endfunction : end_of_elaboration_phase
 == UVM.Phases.start_of_simulation_phase == map:psos == 
 |Insert( 'Comments.Function', '|METHODNAME|', 'start_of_simulation_phase' )|
 virtual function void start_of_simulation_phase(uvm_phase phase);
     <CURSOR>
-endfunction
+endfunction : start_of_simulation_phase
 == UVM.Phases.run_phase == map:pr, sc:r == 
 |Insert( 'Comments.Task', '|METHODNAME|', 'connect_phase' )|
 virtual task run_phase(uvm_phase phase);
     super.run_phase(phase);
     <CURSOR>
-endtask
+endtask : run_phase
 == UVM.Phases.extract_phase == map:px, sc:x == 
 |Insert( 'Comments.Function', '|METHODNAME|', 'extract_phase' )|
 virtual function void extract_phase(uvm_phase phase);

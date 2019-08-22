@@ -57,13 +57,13 @@ function! s:SV_SetLocalVariable ( name )
 endfunction   " ---------- end of function  s:SV_SetLocalVariable  ----------
 
 "------------------------------------------------------------------------------
-"
 "  Look for global variables (if any), to override the defaults.
+"
 "
 call s:SV_SetGlobalVariable( "SV_MenuHeader", 'yes')
 call s:SV_SetGlobalVariable( "SV_OutputGvim", 'vim')
 
-call s:SV_SetLocalVariable('SV_UseToolbox')
+call  s:SV_SetLocalVariable('SV_UseToolbox')
 
 "------------------------------------------------------------------------------
 "
