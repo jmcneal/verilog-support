@@ -88,13 +88,13 @@ let s:SV_ToolboxDir  = []
         let s:SV_ToolboxDir          += [ g:SV_PluginDir.'/autoload/mmtoolbox/' ]
     else
         "  Not yet, but in the future
-        "  " SYSTEM WIDE INSTALLATION
-        "  let g:SV_Installation         = 'system'
-        "  let s:SV_GlobalTemplateFile   = g:SV_PluginDir.'/perl-support/templates/Templates'
-        "  let s:SV_LocalTemplateFile    = $HOME.'/.vim/perl-support/templates/Templates'
-        "  let s:SV_ToolboxDir             += [
-                    "  \    g:SV_PluginDir.'/autoload/mmtoolbox/',
-                    "  \    $HOME.'/.vim/autoload/mmtoolbox/' ]
+        " SYSTEM WIDE INSTALLATION
+        let g:SV_Installation         = 'system'
+        let s:SV_GlobalTemplateFile   = g:SV_PluginDir.'/verilog-support/templates/Templates'
+        let s:SV_LocalTemplateFile    = $HOME.'/.vim/verilog-support/templates/Templates'
+        let s:SV_ToolboxDir             += [
+                    \    g:SV_PluginDir.'/autoload/mmtoolbox/',
+                    \    $HOME.'/.vim/autoload/mmtoolbox/' ]
     endif
     "
     " ==============================================================================
