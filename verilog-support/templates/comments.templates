@@ -29,12 +29,9 @@
 // Class: |?CLASS_NAME|
 // <CURSOR>
 //
-//         BUGS: ---
 //       AUTHOR: |AUTHOR| (|AUTHORREF|), |EMAIL|
 // ORGANIZATION: |ORGANIZATION|
-//      VERSION: 1.0
 //      CREATED: |DATE| |TIME|
-//     REVISION: ---
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 == Comments.Module description == map:chv, start, above, noindent ==
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,9 +41,7 @@
 //   IO SIGNALS: ---
 //       AUTHOR: |AUTHOR| (|AUTHORREF|), |EMAIL|
 // ORGANIZATION: |ORGANIZATION|
-//      VERSION: 1.0
 //      CREATED: |DATE| |TIME|
-//     REVISION: ---
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 == Comments.Variable == map:cv ==
 // Variable: |?VARNAME|
@@ -57,27 +52,25 @@
 == USE STYLES : Doxygen ==
 == Comments.header ==
 //-------------------------------------------------------------------------------------------------
-// The information contained herein is Kandou Bus S.A. confidential
-// and proprietary information and is for use by Kandou Bus S.A.
-// customers only.  The information may not be reproduced or modified
-// in any form without the prior written of Kandou Bus S.A.
-// Kandou Bus S.A. reserves the right to make changes to the
-// information at any time without notice.
+// The information contained herein is confidential and proprietary information
+// and is for use by $company only. The information may not be reproduced or
+// modified in any form without prior written permission.
 //
 // |COPYRIGHT|
 //
+//       AUTHOR: |AUTHOR| (|AUTHORREF|), |EMAIL|
+// ORGANIZATION: |ORGANIZATION|
+//      CREATED: |DATE| |TIME|
 //-------------------------------------------------------------------------------------------------
 
 == Comments.end-of-line-comment == append, nomenu ==
 // <CURSOR>
 == Comments.Task == map:ct ==
 //-------------------------------------------------------------------------------------------------
-// Task: |?METHODNAME|
-// <CURSOR>
+// |?METHODNAME|
 == Comments.Function == map:cf ==
 //-------------------------------------------------------------------------------------------------
-// Function: |?METHODNAME|
-// <CURSOR>
+// |?METHODNAME|
 == Comments.Constructor == map:cons ==
 //-------------------------------------------------------------------------------------------------
 // Constructor: new
@@ -85,13 +78,6 @@
 //-------------------------------------------------------------------------------------------------
 /// @class |?CLASS_NAME|
 /// <CURSOR>
-/// 
-//         BUGS: ---
-//       AUTHOR: |AUTHOR| (|AUTHORREF|), |EMAIL|
-// ORGANIZATION: |ORGANIZATION|
-//      VERSION: 1.0
-//      CREATED: |DATE| |TIME|
-//     REVISION: ---
 //-------------------------------------------------------------------------------------------------
 == Comments.Module description == map:chv, start, above, noindent ==
 //-------------------------------------------------------------------------------------------------
@@ -99,11 +85,6 @@
 ///  <CURSOR>
 //
 //   IO SIGNALS: ---
-//       AUTHOR: |AUTHOR| (|AUTHORREF|), |EMAIL|
-// ORGANIZATION: |ORGANIZATION|
-//      VERSION: 1.0
-//      CREATED: |DATE| |TIME|
-//     REVISION: ---
 //-------------------------------------------------------------------------------------------------
 == Comments.Variable == map:cv ==
 // Variable: |?VARNAME|
@@ -140,12 +121,9 @@
 //
 //        CLASS: |?CLASS_NAME|
 //  DESCRIPTION: <CURSOR>
-//         BUGS: ---
 //       AUTHOR: |AUTHOR| (|AUTHORREF|), |EMAIL|
 // ORGANIZATION: |ORGANIZATION|
-//      VERSION: 1.0
 //      CREATED: |DATE| |TIME|
-//     REVISION: ---
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 == Comments.Module description == map:chv, start, above, noindent ==
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -155,9 +133,7 @@
 //   IO SIGNALS: ---
 //       AUTHOR: |AUTHOR| (|AUTHORREF|), |EMAIL|
 // ORGANIZATION: |ORGANIZATION|
-//      VERSION: 1.0
 //      CREATED: |DATE| |TIME|
-//     REVISION: ---
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 == ENDTEMPLATE ==
 

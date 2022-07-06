@@ -119,17 +119,18 @@ class |?AGENT_TYPE|_agent extends uvm_agent;
     endfunction : connect_phase
 
 endclass : |AGENT_TYPE|_agent
+
 == UVM.Classes.Environment == map:ce, sc:a, noindent == 
 |Insert( 'Comments.Class description', '<CURSOR>')|
-class |?AGENT_TYPE|_environment extends uvm_env;
+class |?ENV_NAME| extends uvm_env;
 
     |?AGENT_TYPE|_agent    |AGENT_TYPE|;
 
-    `uvm_component_utils_begin(|AGENT_TYPE|_environment)
+    `uvm_component_utils_begin(|ENV_NAME|)
     `uvm_component_utils_end
 
     |Insert( 'Comments.Constructor')|
-    function new(input string name="|AGENT_TYPE|_environment", uvm_component parent);
+    function new(input string name="|ENV_NAME|", uvm_component parent);
         super.new(name, parent);
     endfunction
 
@@ -145,7 +146,7 @@ class |?AGENT_TYPE|_environment extends uvm_env;
         <-CONNECT_CODE->
     endfunction : connect_phase
 
-endclass : |AGENT_TYPE|_environment
+endclass : |ENV_NAME|
 == UVM.Classes.Monitor == map:cm, noindent ==
 |Insert( 'Comments.Class description', '<CURSOR>')|
 class |?MON_TYPE|_monitor extends uvm_monitor;
